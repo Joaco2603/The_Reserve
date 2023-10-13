@@ -11,7 +11,8 @@ public class SpawnerControl : NetworkSingleton<SpawnerControl>
     public enum ObjectType
     {
         Trash,
-        Recycle
+        Recycle,
+        Tree
     }
 
     [Serializable]
@@ -30,10 +31,27 @@ public class SpawnerControl : NetworkSingleton<SpawnerControl>
                 go.GetComponent<NetworkObject>().Spawn();
             }
         }
+
+        public void SpawnTrunk(Vector3 position, Quaternion rotation)
+        {
+            for(int i = 0; i < PrewarmCount; i++)
+            {
+                GameObject go = NetworkObjectPool.Instance.GetNetworkObject(Prefab).gameObject;
+                go.transform.position = position + new Vector3(0,1,0);
+                go.transform.rotation = rotation;
+            }
+        }
+
+        public void SpawnTree(Transform position,Quaternion rotation,GameObject prefab)
+        {
+
+        }
     }
 
     [SerializeField]
     private List<SpawnableItem> spawnableItems = new List<SpawnableItem>();
+
+
 
     private void Start()
     {
@@ -51,7 +69,10 @@ public class SpawnerControl : NetworkSingleton<SpawnerControl>
 
         foreach (var item in spawnableItems)
         {
-            item.Spawn();
+            if(item.Type == SpawnerControl.ObjectType.Recycle || item.Type == SpawnerControl.ObjectType.Trash)
+            {
+                item.Spawn();
+            }
         }
     }
 
@@ -64,6 +85,22 @@ public class SpawnerControl : NetworkSingleton<SpawnerControl>
         }
     }
 
+    public void SpawnTreeCall(Vector3 position,Quaternion rotation)
+    {
+        foreach (var item in spawnableItems)
+        {
+            if(item.Type == SpawnerControl.ObjectType.Tree)
+            {
+                item.SpawnTrunk(position,rotation);
+            }
+        }
+    }
+
+
+    public void RespawnTree(Transform position,Quaternion rotation,GameObject prefab)
+    {
+        // prefab.SpawnTree(position,rotation,prefab);
+    }
 
 }
 

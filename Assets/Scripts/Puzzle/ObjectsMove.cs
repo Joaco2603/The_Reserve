@@ -12,13 +12,24 @@ public class ObjectsMove : NetworkBehaviour
     private float zRotation = 0; // Almacena la rotación acumulada en el eje Z
     Quaternion originalRotation;
 
+
     //Player
+    [SerializeField]
     private int vectorXPlayer;
+    [SerializeField]
     private int vectorYPlayer;
     //Glass180
-
+    [SerializeField]
+    private int vectorX180;
+    [SerializeField]
+    private int vectorY180;
     //Glass0
+    [SerializeField]
+    private int vectorX0;
+    [SerializeField]
+    private int vectorY0;
 
+    Floor floorObject;
 
     
     public enum ObjectType
@@ -33,6 +44,7 @@ public class ObjectsMove : NetworkBehaviour
     void Start()
     {
         originalRotation = transform.rotation;
+        floorObject = GameObject.Find("Plataforma").GetComponent<Floor>();
     }
 
     // Update is called once per frame
@@ -45,13 +57,13 @@ public class ObjectsMove : NetworkBehaviour
     }
 
 
-    private void OnCollisionEnter(Collision other) 
-    {
-        if(other.gameObject.GetComponent<Floor>())
-        {
-
-        }
-    }
+    //private void OnCollisionEnter(Collision other) 
+    //{
+        //if(other.gameObject.GetComponent<Floor>())
+        //{
+		
+        //}
+    //}
 
 
 
@@ -59,12 +71,256 @@ public class ObjectsMove : NetworkBehaviour
     {
         if (Input.GetKey(KeyCode.W))
         {
-            // Debug.Log("W is pressed");
+              switch(objectType)
+        		{
+            case ObjectType.Player:
+                // Player movement
+                if(zRotation == 0){
+				vectorYPlayer -= 1;
+					if(vectorYPlayer == floorObject.vectorY){
+					    transform.position = Vector3.Lerp(new Vector3(vectorXPlayer,vectorYPlayer+1,0), new Vector3(vectorXPlayer,vectorYPlayer,0), 3f);
+					}else
+                    {
+					    vectorYPlayer +=1;
+					}
+				}
+				if(zRotation == 90){
+				    vectorXPlayer += 1;
+					if(vectorXPlayer == floorObject.vectorX){
+					    transform.position = Vector3.Lerp(new Vector3(vectorXPlayer-1,vectorYPlayer,0), new Vector3(vectorXPlayer,vectorYPlayer,0), 3f);
+					}else
+                    {
+					    vectorYPlayer -=1;
+					} 
+				}
+				if(zRotation == 180){
+				    vectorYPlayer += 1;
+					if(vectorYPlayer == floorObject.vectorY){
+					    transform.position = Vector3.Lerp(new Vector3(vectorXPlayer,vectorYPlayer-1,0), new Vector3(vectorXPlayer,vectorYPlayer,0), 3f);
+					}else
+                    {
+					    vectorYPlayer-=1;
+					}
+				if(zRotation == 270){
+				    vectorXPlayer -= 1;
+					if(vectorXPlayer == floorObject.vectorX){
+				        transform.position = Vector3.Lerp(new Vector3(vectorXPlayer,vectorYPlayer,0), new Vector3(vectorXPlayer,vectorYPlayer,0), 3f);
+					}else{
+					    vectorXPlayer += 1;
+					} 
+				}
+			}
+                break;
+            case ObjectType.Glass180:
+                // Object1 movement
+                	if(zRotation == 0){
+				    vectorYPlayer -= 1;
+					if(vectorYPlayer == floorObject.vectorY){
+					    transform.position = Vector3.Lerp(new Vector3(vectorXPlayer,vectorYPlayer+1,0), new Vector3(vectorXPlayer,vectorYPlayer,0), 3f);
+					}else{
+					    vectorYPlayer +=1;
+					}
+				}
+				if(zRotation == 90){
+				    vectorXPlayer += 1;
+					if(vectorXPlayer == floorObject.vectorX){
+					    transform.position = Vector3.Lerp(new Vector3(vectorXPlayer-1,vectorYPlayer,0), new Vector3(vectorXPlayer,vectorYPlayer,0), 3f);
+					}else{
+					    vectorYPlayer -=1;
+					} 
+				}
+				if(zRotation == 180){
+				    vectorYPlayer += 1;
+					if(vectorYPlayer == floorObject.vectorY){
+					    transform.position = Vector3.Lerp(new Vector3(vectorXPlayer,vectorYPlayer-1,0), new Vector3(vectorXPlayer,vectorYPlayer,0), 3f);
+					}else
+                    {
+					    vectorYPlayer-=1;
+					}
+				if(zRotation == 270){
+				    vectorXPlayer -= 1;
+					if(vectorXPlayer == floorObject.vectorX){
+				        transform.position = Vector3.Lerp(new Vector3(vectorXPlayer,vectorYPlayer,0), new Vector3(vectorXPlayer,vectorYPlayer,0), 3f);
+					}else{
+					    vectorXPlayer += 1;
+					} 
+				}
+			}
+                break;
+            case ObjectType.Glass0:
+                // Object2 movement
+                if(zRotation == 0){
+				    vectorYPlayer += 1;
+				if(vectorYPlayer == floorObject.vectorY){
+				    transform.position = Vector3.Lerp(new Vector3(vectorXPlayer,vectorYPlayer-1,0), new Vector3(vectorXPlayer,vectorYPlayer,0), 3f);
+				}else
+                {
+				    vectorYPlayer -= 1;
+				}
+				}
+				if(zRotation == 90){
+				    vectorXPlayer -= 1;
+				if(vectorXPlayer == floorObject.vectorX){
+				    transform.position = Vector3.Lerp(new Vector3(vectorXPlayer-1,vectorYPlayer,0), new Vector3(vectorXPlayer,vectorYPlayer,0), 3f); 
+				}else
+                {
+				    vectorXPlayer += 1;
+				}
+				}
+				if(zRotation == 180){
+				    vectorYPlayer -= 1;
+				if(vectorYPlayer == floorObject.vectorY){
+				    transform.position = Vector3.Lerp(new Vector3(vectorXPlayer,vectorYPlayer+1,0), new Vector3(vectorXPlayer,vectorYPlayer,0), 3f);
+				}else{
+				    vectorYPlayer += 1;
+				}
+				}
+				if(zRotation == 270){
+				    vectorXPlayer += 1;
+				if(vectorXPlayer == floorObject.vectorX){
+				    transform.position = Vector3.Lerp(new Vector3(vectorXPlayer-1,vectorYPlayer,0), new Vector3(vectorXPlayer,vectorYPlayer,0), 3f); 
+				}else
+                {
+				    vectorXPlayer -=1;
+				}
+				}
+                break;
+        	}
         }
         
-        if (Input.GetKey(KeyCode.S))
+        if(Input.GetKey(KeyCode.S))
         {
-            // Debug.Log("S is pressed");
+            switch(objectType)
+        	{
+            case ObjectType.Player:
+                // Player movement
+                if(zRotation == 0){
+				    vectorYPlayer += 1;
+				if(vectorYPlayer == floorObject.vectorY){
+				    transform.position = Vector3.Lerp(new Vector3(vectorXPlayer,vectorYPlayer-1,0), new Vector3(vectorXPlayer,vectorYPlayer,0), 3f);
+				}else
+                {
+				    vectorYPlayer -= 1;
+				}
+				}
+				if(zRotation == 90){
+				    vectorXPlayer -= 1;
+				if(vectorXPlayer == floorObject.vectorX){
+				    transform.position = Vector3.Lerp(new Vector3(vectorXPlayer-1,vectorYPlayer,0), new Vector3(vectorXPlayer,vectorYPlayer,0), 3f); 
+				}else
+                {
+				    vectorXPlayer += 1;
+				}
+				}
+				if(zRotation == 180){
+				    vectorYPlayer -= 1;
+				if(vectorYPlayer == floorObject.vectorY){
+				    transform.position = Vector3.Lerp(new Vector3(vectorXPlayer,vectorYPlayer+1,0), new Vector3(vectorXPlayer,vectorYPlayer,0), 3f);
+				}else{
+				    vectorYPlayer += 1;
+				}
+				}
+				if(zRotation == 270){
+				    vectorXPlayer += 1;
+				if(vectorXPlayer == floorObject.vectorX){
+				    transform.position = Vector3.Lerp(new Vector3(vectorXPlayer-1,vectorYPlayer,0), new Vector3(vectorXPlayer,vectorYPlayer,0), 3f); 
+				}else{
+				    vectorXPlayer -=1;
+				    }
+				}
+                break;
+            case ObjectType.Glass180:
+                // Object1 movement
+                if(zRotation == 0){
+				    vectorYPlayer += 1;
+				if(vectorYPlayer == floorObject.vectorY)
+                {
+				    transform.position = Vector3.Lerp(new Vector3(vectorXPlayer,vectorYPlayer-1,0), new Vector3(vectorXPlayer,vectorYPlayer,0), 3f);
+				}else
+                {
+				    vectorYPlayer -= 1;
+                }
+			    }
+				if(zRotation == 90){
+				    vectorXPlayer -= 1;
+				if(vectorXPlayer == floorObject.vectorX){
+				    transform.position = Vector3.Lerp(new Vector3(vectorXPlayer-1,vectorYPlayer,0), new Vector3(vectorXPlayer,vectorYPlayer,0), 3f); 
+				}else
+                {
+				    vectorXPlayer += 1;
+				}
+				}
+				if(zRotation == 180)
+                {
+				    vectorYPlayer -= 1;
+				if(vectorYPlayer == floorObject.vectorY)
+                {
+				    transform.position = Vector3.Lerp(new Vector3(vectorXPlayer,vectorYPlayer+1,0), new Vector3(vectorXPlayer,vectorYPlayer,0), 3f);
+				}else
+                {
+				    vectorYPlayer += 1;
+				}
+				}
+				if(zRotation == 270)
+                {
+				vectorXPlayer += 1;
+				if(vectorXPlayer == floorObject.vectorX)
+                {
+				    transform.position = Vector3.Lerp(new Vector3(vectorXPlayer-1,vectorYPlayer,0), new Vector3(vectorXPlayer,vectorYPlayer,0), 3f); 
+				}else
+                {
+				    vectorXPlayer -=1;
+				}
+				}
+                break;
+            case ObjectType.Glass0:
+                // Object2 movement
+                if(zRotation == 0)
+                {
+				    vectorYPlayer -= 1;
+					if(vectorYPlayer == floorObject.vectorY)
+                    {
+					    transform.position = Vector3.Lerp(new Vector3(vectorXPlayer,vectorYPlayer+1,0), new Vector3(vectorXPlayer,vectorYPlayer,0), 3f);
+					}else
+                    {
+					    vectorYPlayer +=1;
+					}
+				}
+				if(zRotation == 90)
+                {
+				    vectorXPlayer += 1;
+					if(vectorXPlayer == floorObject.vectorX)
+                    {
+					    transform.position = Vector3.Lerp(new Vector3(vectorXPlayer-1,vectorYPlayer,0), new Vector3(vectorXPlayer,vectorYPlayer,0), 3f);
+					}else
+                    {
+					    vectorYPlayer -=1;
+					} 
+				}
+				if(zRotation == 180)
+                {
+				    vectorYPlayer += 1;
+					if(vectorYPlayer == floorObject.vectorY)
+                    {
+					    transform.position = Vector3.Lerp(new Vector3(vectorXPlayer,vectorYPlayer-1,0), new Vector3(vectorXPlayer,vectorYPlayer,0), 3f);
+					}else
+                    {
+					    vectorYPlayer-=1;
+					}
+                }
+				if(zRotation == 270)
+                {
+				    vectorXPlayer -= 1;
+					if(vectorXPlayer == floorObject.vectorX)
+                    {
+				        transform.position = Vector3.Lerp(new Vector3(vectorXPlayer,vectorYPlayer,0), new Vector3(vectorXPlayer,vectorYPlayer,0), 3f);
+					}else
+                    {
+					    vectorXPlayer += 1;
+					} 
+				}
+                break;
+            }
         }
 
         // Rota a la izquierda con la letra 'A'
@@ -112,4 +368,4 @@ public class ObjectsMove : NetworkBehaviour
                 break;
         }
     }
-} 
+}

@@ -19,7 +19,6 @@ public class NetworkObjectPool : Singleton<NetworkObjectPool>
 
     Dictionary<GameObject, Queue<NetworkObject>> pooledObjects = new Dictionary<GameObject, Queue<NetworkObject>>();
 
-
     public void OnValidate()
     {
         for (var i = 0; i < PooledPrefabsList.Count; i++)
@@ -80,7 +79,7 @@ public class NetworkObjectPool : Singleton<NetworkObjectPool>
 
         go.SetActive(false);
     }
-
+    
 
     /// <summary>
     /// Adds a prefab to the list of spawnable prefabs.
@@ -130,6 +129,8 @@ public class NetworkObjectPool : Singleton<NetworkObjectPool>
     /// <param name="position"></param>
     /// <param name="rotation"></param>
     /// <returns></returns>
+
+
     private NetworkObject GetNetworkObjectInternal(GameObject prefab, Vector3 position, Quaternion rotation)
     {
         var queue = pooledObjects[prefab];

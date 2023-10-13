@@ -55,6 +55,8 @@ public class PlayerWithRaycastControl : NetworkBehaviour
     private Animator animator;
 
     private LiveTree treeLiveComponent;
+    private Vector3 treePosition;
+    private Quaternion treeRotation;
 
     private void Awake()
     {
@@ -210,7 +212,10 @@ public class PlayerWithRaycastControl : NetworkBehaviour
         NetworkObject targetObject;
         if(NetworkManager.Singleton.SpawnManager.SpawnedObjects.TryGetValue(objectId, out targetObject))
         { 
+            treePosition = targetObject.transform.position;   // Aquí obtenemos la posición
+            treeRotation = targetObject.transform.rotation; // Aquí obtenemos la rotación
 
+            
             targetLiveTree = targetObject.GetComponent<LiveTree>().networkPlayerHealth.Value;
 
             treeLiveComponent = targetObject.GetComponent<LiveTree>();
@@ -247,8 +252,9 @@ public class PlayerWithRaycastControl : NetworkBehaviour
     }
 
     [ServerRpc]
-    private void ChangeTreeServerRpc(){
-        treeLiveComponent.CheckTreeHealth(this.transform.forward);
+    private void ChangeTreeServerRpc()
+    {
+        treeLiveComponent.CheckTreeHealth(treePosition,treeRotation);
     }
     
     [ServerRpc]

@@ -2786,6 +2786,8 @@ MonoBehaviour:
     PrewarmCount: 20
   - Prefab: {fileID: 2936893394491175954, guid: e21e3a181c337df47ac235e7b0dbea45, type: 3}
     PrewarmCount: 20
+  - Prefab: {fileID: 9033923795009517546, guid: 0cabfe94f1a8e2140b53ddbd2bdd3eee, type: 3}
+    PrewarmCount: 20
 --- !u!4 &518499867
 Transform:
   m_ObjectHideFlags: 0
@@ -4640,7 +4642,7 @@ MonoBehaviour:
     ModeOverride: 0
     LensShift: {x: 0, y: 0}
     GateFit: 2
-    m_SensorSize: {x: 1.5148515, y: 1}
+    m_SensorSize: {x: 1.9290429, y: 1}
   m_Transitions:
     m_BlendHint: 0
     m_InheritPosition: 0
@@ -8153,6 +8155,9 @@ MonoBehaviour:
   - Prefab: {fileID: 2936893394491175954, guid: e21e3a181c337df47ac235e7b0dbea45, type: 3}
     PrewarmCount: 1
     Type: 2
+  - Prefab: {fileID: 9033923795009517546, guid: 0cabfe94f1a8e2140b53ddbd2bdd3eee, type: 3}
+    PrewarmCount: 1
+    Type: 3
 --- !u!114 &2016632162
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8829,7 +8834,7 @@ PrefabInstance:
       objectReference: {fileID: 626551820}
     - target: {fileID: 8409294918987494554, guid: dca626240b27ba64981712d7c286ea75, type: 3}
       propertyPath: PooledPrefabsList.Array.size
-      value: 10
+      value: 11
       objectReference: {fileID: 0}
     - target: {fileID: 8409294918987494554, guid: dca626240b27ba64981712d7c286ea75, type: 3}
       propertyPath: PooledPrefabsList.Array.data[0].PrewarmCount

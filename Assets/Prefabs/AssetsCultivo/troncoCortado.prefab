@@ -15,9 +15,9 @@ GameObject:
   - component: {fileID: 2594241793278822721}
   - component: {fileID: 6200864132237161880}
   - component: {fileID: 7945440451841703798}
-  - component: {fileID: 7161414355312892677}
   - component: {fileID: -7810486441957542589}
-  m_Layer: 0
+  - component: {fileID: 3006689853902018958}
+  m_Layer: 6
   m_Name: troncoCortado
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -143,11 +143,11 @@ Rigidbody:
   m_Mass: 1
   m_Drag: 0
   m_AngularDrag: 0.05
-  m_UseGravity: 1
+  m_UseGravity: 0
   m_IsKinematic: 0
   m_Interpolate: 0
   m_Constraints: 0
-  m_CollisionDetection: 0
+  m_CollisionDetection: 3
 --- !u!114 &7945440451841703798
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -160,20 +160,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f6c0be61502bb534f922ebb746851216, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!64 &7161414355312892677
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2936893394491175954}
-  m_Material: {fileID: 13400000, guid: bb2fa900941f8c542a50f3d75443357a, type: 2}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 4
-  m_Convex: 1
-  m_CookingOptions: 30
-  m_Mesh: {fileID: -3942208044751350275, guid: 60d43a659f7e16948b183cfd9fb81766, type: 3}
 --- !u!114 &-7810486441957542589
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -187,3 +173,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   treeAsset: {fileID: 9033923795009517546, guid: 0cabfe94f1a8e2140b53ddbd2bdd3eee, type: 3}
+--- !u!65 &3006689853902018958
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2936893394491175954}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.012730144, y: 0.014777864, z: 0.008101376}
+  m_Center: {x: 0.028762337, y: 0.0012692678, z: -0.045926202}

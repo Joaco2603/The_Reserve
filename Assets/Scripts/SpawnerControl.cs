@@ -12,7 +12,8 @@ public class SpawnerControl : NetworkSingleton<SpawnerControl>
     {
         Trash,
         Recycle,
-        Tree
+        Tree,
+        TreeBroken
     }
 
     [Serializable]
@@ -42,9 +43,13 @@ public class SpawnerControl : NetworkSingleton<SpawnerControl>
             }
         }
 
-        public void SpawnTree(Transform position,Quaternion rotation,GameObject prefab)
+        public void SpawnTree(Transform position,Quaternion rotation)
         {
-
+            for(int i = 0; i < PrewarmCount; i++)
+            {
+                GameObject go = NetworkObjectPool.Instance.GetNetworkObject(Prefab).gameObject;
+                go.transform.position = position.position;
+            }
         }
     }
 
@@ -97,9 +102,15 @@ public class SpawnerControl : NetworkSingleton<SpawnerControl>
     }
 
 
-    public void RespawnTree(Transform position,Quaternion rotation,GameObject prefab)
+    public void RespawnTree(Transform position,Quaternion rotation)
     {
-        // prefab.SpawnTree(position,rotation,prefab);
+        foreach (var item in spawnableItems)
+        {
+            if(item.Type == SpawnerControl.ObjectType.TreeBroken)
+            {
+                item.SpawnTree(position,rotation);
+            }
+        }
     }
 
 }

@@ -7,12 +7,19 @@ public class Trunk : NetworkBehaviour
     [SerializeField]
     private GameObject treeAsset;
 
-    private void OnCollisionEnter(Collision other)
+
+    public void OnTriggerStay(Collider other)
     {
-        if(Input.GetKey(KeyCode.R))
+        if (!IsClient && !IsOwner) return;
+
+        var playerHud = other.gameObject.GetComponent<PlayerHud>();
+        //Si este componente es nulo no aplicar esta aplicacion por defecto
+        var networkObject = other.gameObject.GetComponent<NetworkObject>();
+        if(networkObject != null && playerHud != null && Input.GetKey(KeyCode.E))
         {
+            Debug.Log("Funciono");
             var spawnControl = SpawnerControl.Instance;
-            spawnControl.RespawnTree(this.transform,Quaternion.identity,treeAsset);
+            spawnControl.RespawnTree(this.transform,this.transform.rotation);
         }
     }
 }

@@ -65,10 +65,13 @@ public class LiveTree : NetworkSingleton<LiveTree>
         if (destroyCalls) return;
             var CallInstanceTree = SpawnerControl.Instance;
             CallInstanceTree.SpawnTreeCall(transformPlayer,transformRotation);
-
-            
-
+            Invoke("ConvertDestroyCalls",2f);
         destroyCalls = true;
+    }
+
+    private void ConvertDestroyCalls()
+    {
+        destroyCalls = false;
     }
 
 

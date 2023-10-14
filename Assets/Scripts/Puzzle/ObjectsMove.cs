@@ -7,7 +7,6 @@ public class ObjectsMove : NetworkBehaviour
 {
     public bool mode = false;
     private int speed = 2; 
-    private int rotationSpeed = 500;
 
     private float zRotation = 0; // Almacena la rotación acumulada en el eje Z
     Quaternion originalRotation;

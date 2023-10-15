@@ -33,13 +33,13 @@ public class RecolectPlant : NetworkBehaviour
     [ServerRpc(RequireOwnership = false)]
     private void RecolectServerRpc()
     {
+        this.gameObject.transform.parent = null;
         RecolectClientRpc();
     }
 
     [ClientRpc]
     private void RecolectClientRpc()
     {
-        this.gameObject.transform.parent = null;
         var objectPool = NetworkObjectPool.Instance;
         objectPool.ReturnNetworkObject(this.gameObject.GetComponent<NetworkObject>(),this.gameObject);   
     }

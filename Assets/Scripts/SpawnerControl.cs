@@ -13,7 +13,9 @@ public class SpawnerControl : NetworkSingleton<SpawnerControl>
         Trash,
         Recycle,
         Tree,
-        TreeBroken
+        TreeBroken,
+        seed,
+        sweath
     }
 
     [Serializable]
@@ -40,6 +42,7 @@ public class SpawnerControl : NetworkSingleton<SpawnerControl>
                 GameObject go = NetworkObjectPool.Instance.GetNetworkObject(Prefab).gameObject;
                 go.transform.position = position + new Vector3(0,1,0);
                 go.transform.rotation = rotation;
+                go.GetComponent<NetworkObject>().Spawn();
             }
         }
 
@@ -48,9 +51,23 @@ public class SpawnerControl : NetworkSingleton<SpawnerControl>
             for(int i = 0; i < PrewarmCount; i++)
             {
                 GameObject go = NetworkObjectPool.Instance.GetNetworkObject(Prefab).gameObject;
-                go.transform.position = position.position;
+                go.transform.position = position.position + new Vector3(0,-1.6f,0);
+                go.transform.rotation = rotation;
+                go.GetComponent<NetworkObject>().Spawn();
             }
         }
+
+        public void SpawnSeed(Transform position,Quaternion rotation)
+        {
+            for(int i = 0; i < PrewarmCount; i++)
+            {
+                GameObject go = NetworkObjectPool.Instance.GetNetworkObject(Prefab).gameObject;
+                go.transform.position = position.position + new Vector3(0,0.5f,0);
+                go.transform.rotation = rotation;
+                go.GetComponent<NetworkObject>().Spawn();
+            }
+        }
+
     }
 
     [SerializeField]
@@ -92,6 +109,8 @@ public class SpawnerControl : NetworkSingleton<SpawnerControl>
 
     public void SpawnTreeCall(Vector3 position,Quaternion rotation)
     {
+        if (!IsServer) return;
+
         foreach (var item in spawnableItems)
         {
             if(item.Type == SpawnerControl.ObjectType.Tree)
@@ -104,11 +123,27 @@ public class SpawnerControl : NetworkSingleton<SpawnerControl>
 
     public void RespawnTree(Transform position,Quaternion rotation)
     {
+        if (!IsServer) return;
+
         foreach (var item in spawnableItems)
         {
             if(item.Type == SpawnerControl.ObjectType.TreeBroken)
             {
                 item.SpawnTree(position,rotation);
+            }
+        }
+    }
+
+
+    public void PlantSeed(Transform position,Quaternion rotation)
+    {
+        if (!IsServer) return;
+
+        foreach (var item in spawnableItems)
+        {
+            if(item.Type == SpawnerControl.ObjectType.seed)
+            {
+                item.SpawnSeed(position,rotation);
             }
         }
     }

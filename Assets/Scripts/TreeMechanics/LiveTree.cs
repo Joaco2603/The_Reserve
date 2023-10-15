@@ -28,6 +28,9 @@ public class LiveTree : NetworkSingleton<LiveTree>
 
     private Quaternion transformRotation;
 
+    private NetworkObject NetworkObjectToDestroy;
+    private GameObject gameObjectToDestroy;
+
     private bool destroyCalls = false;
 
     private void Awake()
@@ -44,8 +47,8 @@ public class LiveTree : NetworkSingleton<LiveTree>
         {   
             transformPlayer = transformPlayerParam;
             transformRotation = rotation;
+            CreateTreePlaceholderServerRpc();//Cuando el árbol cae, crea un marcador
             FallTreeServerRpc();
-            Invoke("CreateTreePlaceholder",6f);//Cuando el árbol cae, crea un marcador
         }
     }
 
@@ -53,20 +56,28 @@ public class LiveTree : NetworkSingleton<LiveTree>
     [ServerRpc(RequireOwnership = false)]
     private void FallTreeServerRpc()
     {
+        NetworkObjectToDestroy = this.NetworkObject;
+        gameObjectToDestroy = this.gameObject;
         // Activar la física.
         rb.isKinematic = false;
-        rb.AddForce(transformPlayer * 100f); // Agregar una pequeña fuerza hacia atrás para iniciar la caída.
-        Invoke("CallReturnNetworkClientRpc",5f);
+        rb.AddForce(transformPlayer * 2f); // Agregar una pequeña fuerza hacia atrás para iniciar la caída.
+        Invoke("CallReturnNetworkClientRpc",2f);
     }
 
-
-    private void CreateTreePlaceholder()
+    [ServerRpc(RequireOwnership = false)]
+    private void CreateTreePlaceholderServerRpc()
     {
         if (destroyCalls) return;
-            var CallInstanceTree = SpawnerControl.Instance;
-            CallInstanceTree.SpawnTreeCall(transformPlayer,transformRotation);
-            Invoke("ConvertDestroyCalls",2f);
+            CreateTreePlaceholderClientRpc();
+            Invoke("ConvertDestroyCalls",3f);
         destroyCalls = true;
+    }
+
+    [ClientRpc]
+    private void CreateTreePlaceholderClientRpc()
+    {
+        var CallInstanceTree = SpawnerControl.Instance;
+        CallInstanceTree.SpawnTreeCall(transformPlayer,transformRotation);
     }
 
     private void ConvertDestroyCalls()
@@ -82,7 +93,7 @@ public class LiveTree : NetworkSingleton<LiveTree>
         puntaje = Puntaje.Instance;
         puntaje.wood.Value += 10;
         objectPool = NetworkObjectPool.Instance;
-        objectPool.ReturnNetworkObject(this.NetworkObject, this.gameObject);
+        objectPool.ReturnNetworkObject(NetworkObjectToDestroy , gameObjectToDestroy);
     }
 
 

@@ -7,6 +7,27 @@ public class Trunk : NetworkBehaviour
     [SerializeField]
     private GameObject treeAsset;
 
+    Collider collider;
+    Rigidbody rb;
+
+    private void OnCollisionEnter(Collision other)
+    {
+        if (!IsClient && !IsOwner) return;
+
+        collider = this.GetComponent<Collider>();
+
+        rb = this.GetComponent<Rigidbody>();
+
+
+        Invoke("Disable",1f);
+    }
+
+    void Disable()
+    {
+        rb.useGravity = false;
+
+        collider.isTrigger = true;
+    }
 
     public void OnTriggerStay(Collider other)
     {
@@ -17,9 +38,27 @@ public class Trunk : NetworkBehaviour
         var networkObject = other.gameObject.GetComponent<NetworkObject>();
         if(networkObject != null && playerHud != null && Input.GetKey(KeyCode.E))
         {
-            Debug.Log("Funciono");
-            var spawnControl = SpawnerControl.Instance;
-            spawnControl.RespawnTree(this.transform,this.transform.rotation);
+            DespawnServerRpc(); 
         }
     }
+
+    [ServerRpc(RequireOwnership = false)]
+    private void DespawnServerRpc()
+    {
+        CallReturnNetworkClientRpc();
+    }
+
+
+
+    [ClientRpc]
+    private void CallReturnNetworkClientRpc()
+    {
+
+        var spawnControl = SpawnerControl.Instance;
+        spawnControl.RespawnTree(this.transform,this.transform.rotation);
+
+        var objectPool = NetworkObjectPool.Instance;
+        objectPool.ReturnNetworkObject(this.NetworkObject, this.gameObject);
+    }
+
 }

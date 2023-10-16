@@ -6,29 +6,19 @@ using Unity.Netcode;
 public class ObjectsMove : NetworkBehaviour
 {
     public bool mode = false;
+	private bool YouCan = false;
     private int speed = 2; 
 
     private float zRotation = 0; // Almacena la rotación acumulada en el eje Z
     Quaternion originalRotation;
 
-
-    //Player
-    [SerializeField]
-    private int vectorXPlayer;
-    [SerializeField]
-    private int vectorYPlayer;
-    //Glass180
-    [SerializeField]
-    private int vectorX180;
-    [SerializeField]
-    private int vectorY180;
-    //Glass0
-    [SerializeField]
-    private int vectorX0;
-    [SerializeField]
-    private int vectorY0;
-
     Floor floorObject;
+
+	Vector3 positionAfter;
+
+	Vector3 player = new Vector3(0.03f,-0.08f,3.45f);
+	Vector3 glass180 = new Vector3(0.02916622f,-0.335f,5.910002f);
+	Vector3 glass0 = new Vector3(0.02916622f,-0.335f,1.08f);
 
     
     public enum ObjectType
@@ -43,7 +33,6 @@ public class ObjectsMove : NetworkBehaviour
     void Start()
     {
         originalRotation = transform.rotation;
-        floorObject = GameObject.Find("Plataforma").GetComponent<Floor>();
     }
 
     // Update is called once per frame
@@ -55,275 +44,59 @@ public class ObjectsMove : NetworkBehaviour
         }
     }
 
+	private void OnTriggerStay(Collider other)
+	{
+		Debug.Log(other);
+		var obj = other.gameObject.GetComponent<Floor>();
+		if(mode && obj != null)
+        {
+			YouCan = true;
+		}
+		var colisionWithPlayer = other.gameObject.tag;
+		Debug.Log(colisionWithPlayer);
+		if(mode && colisionWithPlayer == "Puzzle")
+		{
+			Debug.Log("Colision con ObjectsMove detectada.");
+        	if (objectType == ObjectType.Player)
+			{
+				restart(player);
+			}
+			if(objectType == ObjectType.Glass180)
+			{
+				restart(glass180);
+			}
+			if(objectType == ObjectType.Glass0)
+			{
+				restart(glass0);
+			}
+		}
+	}
 
-    //private void OnCollisionEnter(Collision other) 
-    //{
-        //if(other.gameObject.GetComponent<Floor>())
-        //{
-		
-        //}
-    //}
+	private void restart(Vector3 vector3)
+	{
+		this.transform.position = vector3;
+	}
 
+
+	private void OnTriggerExit(Collider other)
+	{
+		if(mode)
+        {
+			YouCan = false;
+		}
+	}
 
 
     private void MoveObjects()
     {
-        if (Input.GetKey(KeyCode.W))
-        {
-              switch(objectType)
-        		{
-            case ObjectType.Player:
-                // Player movement
-                if(zRotation == 0){
-				vectorYPlayer -= 1;
-					if(vectorYPlayer == floorObject.vectorY){
-					    transform.position = Vector3.Lerp(new Vector3(vectorXPlayer,vectorYPlayer+1,0), new Vector3(vectorXPlayer,vectorYPlayer,0), 3f);
-					}else
-                    {
-					    vectorYPlayer +=1;
-					}
-				}
-				if(zRotation == 90){
-				    vectorXPlayer += 1;
-					if(vectorXPlayer == floorObject.vectorX){
-					    transform.position = Vector3.Lerp(new Vector3(vectorXPlayer-1,vectorYPlayer,0), new Vector3(vectorXPlayer,vectorYPlayer,0), 3f);
-					}else
-                    {
-					    vectorYPlayer -=1;
-					} 
-				}
-				if(zRotation == 180){
-				    vectorYPlayer += 1;
-					if(vectorYPlayer == floorObject.vectorY){
-					    transform.position = Vector3.Lerp(new Vector3(vectorXPlayer,vectorYPlayer-1,0), new Vector3(vectorXPlayer,vectorYPlayer,0), 3f);
-					}else
-                    {
-					    vectorYPlayer-=1;
-					}
-				if(zRotation == 270){
-				    vectorXPlayer -= 1;
-					if(vectorXPlayer == floorObject.vectorX){
-				        transform.position = Vector3.Lerp(new Vector3(vectorXPlayer,vectorYPlayer,0), new Vector3(vectorXPlayer,vectorYPlayer,0), 3f);
-					}else{
-					    vectorXPlayer += 1;
-					} 
-				}
-			}
-                break;
-            case ObjectType.Glass180:
-                // Object1 movement
-                	if(zRotation == 0){
-				    vectorYPlayer -= 1;
-					if(vectorYPlayer == floorObject.vectorY){
-					    transform.position = Vector3.Lerp(new Vector3(vectorXPlayer,vectorYPlayer+1,0), new Vector3(vectorXPlayer,vectorYPlayer,0), 3f);
-					}else{
-					    vectorYPlayer +=1;
-					}
-				}
-				if(zRotation == 90){
-				    vectorXPlayer += 1;
-					if(vectorXPlayer == floorObject.vectorX){
-					    transform.position = Vector3.Lerp(new Vector3(vectorXPlayer-1,vectorYPlayer,0), new Vector3(vectorXPlayer,vectorYPlayer,0), 3f);
-					}else{
-					    vectorYPlayer -=1;
-					} 
-				}
-				if(zRotation == 180){
-				    vectorYPlayer += 1;
-					if(vectorYPlayer == floorObject.vectorY){
-					    transform.position = Vector3.Lerp(new Vector3(vectorXPlayer,vectorYPlayer-1,0), new Vector3(vectorXPlayer,vectorYPlayer,0), 3f);
-					}else
-                    {
-					    vectorYPlayer-=1;
-					}
-				if(zRotation == 270){
-				    vectorXPlayer -= 1;
-					if(vectorXPlayer == floorObject.vectorX){
-				        transform.position = Vector3.Lerp(new Vector3(vectorXPlayer,vectorYPlayer,0), new Vector3(vectorXPlayer,vectorYPlayer,0), 3f);
-					}else{
-					    vectorXPlayer += 1;
-					} 
-				}
-			}
-                break;
-            case ObjectType.Glass0:
-                // Object2 movement
-                if(zRotation == 0){
-				    vectorYPlayer += 1;
-				if(vectorYPlayer == floorObject.vectorY){
-				    transform.position = Vector3.Lerp(new Vector3(vectorXPlayer,vectorYPlayer-1,0), new Vector3(vectorXPlayer,vectorYPlayer,0), 3f);
-				}else
-                {
-				    vectorYPlayer -= 1;
-				}
-				}
-				if(zRotation == 90){
-				    vectorXPlayer -= 1;
-				if(vectorXPlayer == floorObject.vectorX){
-				    transform.position = Vector3.Lerp(new Vector3(vectorXPlayer-1,vectorYPlayer,0), new Vector3(vectorXPlayer,vectorYPlayer,0), 3f); 
-				}else
-                {
-				    vectorXPlayer += 1;
-				}
-				}
-				if(zRotation == 180){
-				    vectorYPlayer -= 1;
-				if(vectorYPlayer == floorObject.vectorY){
-				    transform.position = Vector3.Lerp(new Vector3(vectorXPlayer,vectorYPlayer+1,0), new Vector3(vectorXPlayer,vectorYPlayer,0), 3f);
-				}else{
-				    vectorYPlayer += 1;
-				}
-				}
-				if(zRotation == 270){
-				    vectorXPlayer += 1;
-				if(vectorXPlayer == floorObject.vectorX){
-				    transform.position = Vector3.Lerp(new Vector3(vectorXPlayer-1,vectorYPlayer,0), new Vector3(vectorXPlayer,vectorYPlayer,0), 3f); 
-				}else
-                {
-				    vectorXPlayer -=1;
-				}
-				}
-                break;
-        	}
-        }
-        
-        if(Input.GetKey(KeyCode.S))
-        {
-            switch(objectType)
-        	{
-            case ObjectType.Player:
-                // Player movement
-                if(zRotation == 0){
-				    vectorYPlayer += 1;
-				if(vectorYPlayer == floorObject.vectorY){
-				    transform.position = Vector3.Lerp(new Vector3(vectorXPlayer,vectorYPlayer-1,0), new Vector3(vectorXPlayer,vectorYPlayer,0), 3f);
-				}else
-                {
-				    vectorYPlayer -= 1;
-				}
-				}
-				if(zRotation == 90){
-				    vectorXPlayer -= 1;
-				if(vectorXPlayer == floorObject.vectorX){
-				    transform.position = Vector3.Lerp(new Vector3(vectorXPlayer-1,vectorYPlayer,0), new Vector3(vectorXPlayer,vectorYPlayer,0), 3f); 
-				}else
-                {
-				    vectorXPlayer += 1;
-				}
-				}
-				if(zRotation == 180){
-				    vectorYPlayer -= 1;
-				if(vectorYPlayer == floorObject.vectorY){
-				    transform.position = Vector3.Lerp(new Vector3(vectorXPlayer,vectorYPlayer+1,0), new Vector3(vectorXPlayer,vectorYPlayer,0), 3f);
-				}else{
-				    vectorYPlayer += 1;
-				}
-				}
-				if(zRotation == 270){
-				    vectorXPlayer += 1;
-				if(vectorXPlayer == floorObject.vectorX){
-				    transform.position = Vector3.Lerp(new Vector3(vectorXPlayer-1,vectorYPlayer,0), new Vector3(vectorXPlayer,vectorYPlayer,0), 3f); 
-				}else{
-				    vectorXPlayer -=1;
-				    }
-				}
-                break;
-            case ObjectType.Glass180:
-                // Object1 movement
-                if(zRotation == 0){
-				    vectorYPlayer += 1;
-				if(vectorYPlayer == floorObject.vectorY)
-                {
-				    transform.position = Vector3.Lerp(new Vector3(vectorXPlayer,vectorYPlayer-1,0), new Vector3(vectorXPlayer,vectorYPlayer,0), 3f);
-				}else
-                {
-				    vectorYPlayer -= 1;
-                }
-			    }
-				if(zRotation == 90){
-				    vectorXPlayer -= 1;
-				if(vectorXPlayer == floorObject.vectorX){
-				    transform.position = Vector3.Lerp(new Vector3(vectorXPlayer-1,vectorYPlayer,0), new Vector3(vectorXPlayer,vectorYPlayer,0), 3f); 
-				}else
-                {
-				    vectorXPlayer += 1;
-				}
-				}
-				if(zRotation == 180)
-                {
-				    vectorYPlayer -= 1;
-				if(vectorYPlayer == floorObject.vectorY)
-                {
-				    transform.position = Vector3.Lerp(new Vector3(vectorXPlayer,vectorYPlayer+1,0), new Vector3(vectorXPlayer,vectorYPlayer,0), 3f);
-				}else
-                {
-				    vectorYPlayer += 1;
-				}
-				}
-				if(zRotation == 270)
-                {
-				vectorXPlayer += 1;
-				if(vectorXPlayer == floorObject.vectorX)
-                {
-				    transform.position = Vector3.Lerp(new Vector3(vectorXPlayer-1,vectorYPlayer,0), new Vector3(vectorXPlayer,vectorYPlayer,0), 3f); 
-				}else
-                {
-				    vectorXPlayer -=1;
-				}
-				}
-                break;
-            case ObjectType.Glass0:
-                // Object2 movement
-                if(zRotation == 0)
-                {
-				    vectorYPlayer -= 1;
-					if(vectorYPlayer == floorObject.vectorY)
-                    {
-					    transform.position = Vector3.Lerp(new Vector3(vectorXPlayer,vectorYPlayer+1,0), new Vector3(vectorXPlayer,vectorYPlayer,0), 3f);
-					}else
-                    {
-					    vectorYPlayer +=1;
-					}
-				}
-				if(zRotation == 90)
-                {
-				    vectorXPlayer += 1;
-					if(vectorXPlayer == floorObject.vectorX)
-                    {
-					    transform.position = Vector3.Lerp(new Vector3(vectorXPlayer-1,vectorYPlayer,0), new Vector3(vectorXPlayer,vectorYPlayer,0), 3f);
-					}else
-                    {
-					    vectorYPlayer -=1;
-					} 
-				}
-				if(zRotation == 180)
-                {
-				    vectorYPlayer += 1;
-					if(vectorYPlayer == floorObject.vectorY)
-                    {
-					    transform.position = Vector3.Lerp(new Vector3(vectorXPlayer,vectorYPlayer-1,0), new Vector3(vectorXPlayer,vectorYPlayer,0), 3f);
-					}else
-                    {
-					    vectorYPlayer-=1;
-					}
-                }
-				if(zRotation == 270)
-                {
-				    vectorXPlayer -= 1;
-					if(vectorXPlayer == floorObject.vectorX)
-                    {
-				        transform.position = Vector3.Lerp(new Vector3(vectorXPlayer,vectorYPlayer,0), new Vector3(vectorXPlayer,vectorYPlayer,0), 3f);
-					}else
-                    {
-					    vectorXPlayer += 1;
-					} 
-				}
-                break;
-            }
-        }
+
+		if(mode && YouCan && Input.GetKeyDown(KeyCode.W))
+		{
+			this.transform.position = Vector3.Lerp(this.transform.position, this.transform.position + this.transform.forward, 3f);
+		}
 
         // Rota a la izquierda con la letra 'A'
-        if (Input.GetKeyDown(KeyCode.A))
+        if (mode && Input.GetKeyDown(KeyCode.A))
         {
 
             if(zRotation == 360)
@@ -338,7 +111,7 @@ public class ObjectsMove : NetworkBehaviour
         }
 
         // Rota a la derecha con la letra 'D'
-        if (Input.GetKeyDown(KeyCode.D))
+        if (mode && Input.GetKeyDown(KeyCode.D))
         {
             if(zRotation == 0)
             {
@@ -351,20 +124,15 @@ public class ObjectsMove : NetworkBehaviour
         }
 
 
-        switch(objectType)
-        {
-            case ObjectType.Player:
-                // Player movement
-                transform.rotation = Quaternion.Euler(originalRotation.eulerAngles.x, -zRotation, 0);
-                break;
-            case ObjectType.Glass180:
-                // Object1 movement
-                transform.rotation = Quaternion.Euler(originalRotation.eulerAngles.x, -180 + zRotation, 0);
-                break;
-            case ObjectType.Glass0:
-                // Object2 movement
-                transform.rotation = Quaternion.Euler(originalRotation.eulerAngles.x, zRotation, 0);
-                break;
-        }
+		if (objectType == ObjectType.Player || objectType == ObjectType.Glass0)
+		{
+			RotationUpdate(1);
+		}else{
+			RotationUpdate(-1);
+		}	
     }
+	private void RotationUpdate(int sign)
+	{
+		transform.rotation = Quaternion.Euler(originalRotation.eulerAngles.x, sign * zRotation, originalRotation.eulerAngles.z);
+	}
 }

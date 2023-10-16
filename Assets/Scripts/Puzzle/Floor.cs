@@ -10,7 +10,7 @@ public class Floor : NetworkBehaviour
     [SerializeField] 
     private bool WinCondition = false;
 
-    public int vectorY;
+    // public int vectorY;
 
-    public int vectorX;
+    // public int vectorX;
 }

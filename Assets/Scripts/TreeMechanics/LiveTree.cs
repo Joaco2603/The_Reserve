@@ -32,6 +32,7 @@ public class LiveTree : NetworkSingleton<LiveTree>
     private GameObject gameObjectToDestroy;
 
     private bool destroyCalls = false;
+    private bool destroyCallsCreatePlaceHolder = false;
 
     private void Awake()
     {
@@ -56,12 +57,13 @@ public class LiveTree : NetworkSingleton<LiveTree>
     [ServerRpc(RequireOwnership = false)]
     private void FallTreeServerRpc()
     {
-        NetworkObjectToDestroy = this.NetworkObject;
-        gameObjectToDestroy = this.gameObject;
-        // Activar la física.
-        rb.isKinematic = false;
-        rb.AddForce(transformPlayer * 2f); // Agregar una pequeña fuerza hacia atrás para iniciar la caída.
-        Invoke("CallReturnNetworkClientRpc",2f);
+        if (destroyCallsCreatePlaceHolder) return;
+            // Activar la física.
+            rb.isKinematic = false;
+            rb.AddForce(transformPlayer * 2f); // Agregar una pequeña fuerza hacia atrás para iniciar la caída.
+            Invoke("CallReturnNetworkClientRpc",2f);
+        destroyCallsCreatePlaceHolder = true;
+        Invoke("ConvertDestroyCalls",3f);
     }
 
     [ServerRpc(RequireOwnership = false)]
@@ -90,28 +92,12 @@ public class LiveTree : NetworkSingleton<LiveTree>
     [ClientRpc]
     private void CallReturnNetworkClientRpc()
     {   
+        NetworkObjectToDestroy = this.NetworkObject;
+        gameObjectToDestroy = this.gameObject;
         puntaje = Puntaje.Instance;
         puntaje.wood.Value += 10;
         objectPool = NetworkObjectPool.Instance;
-        objectPool.ReturnNetworkObject(NetworkObjectToDestroy , gameObjectToDestroy);
+        objectPool.ReturnNetworkObject(NetworkObjectToDestroy ,gameObjectToDestroy);
     }
 
-
-
-    [ServerRpc(RequireOwnership = false)]
-    private void PlantTreeAtPlaceholderServerRpc(Vector3 position,ulong treePrefab)
-    {
-
-        // Solicitar un objeto de la piscina
-        // var spawnerControl = SpawnerControl.Instance;
-        // spawnerControl.SpawnTreeCall(position, Quaternion.identity);
-
-        // Si tu versión de Netcode requiere que llames a Spawn después de sacar un objeto de la piscina, hazlo aquí.
-        // if(!treePrefab.IsSpawned)
-        // {
-        //     networkTree.Spawn();
-        // }
-
-        // Eliminar el marcador actual
-    }
 }

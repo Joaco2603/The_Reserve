@@ -41,7 +41,7 @@ public class PlayerWithRaycastControl : NetworkBehaviour
     private GameObject rightHand;
 
     [SerializeField]
-    private float minPunchDistance = 1.0f;
+    private float minPunchDistance = 30.0f;
 
     private float targetLiveTree;
 
@@ -93,8 +93,8 @@ public class PlayerWithRaycastControl : NetworkBehaviour
         {
             if (networkPlayerState.Value == PlayerState.Punch && ActivePunchActionKey())
             {
-                CheckPunch(leftHand.transform, Vector3.up);
-                CheckPunch(rightHand.transform, Vector3.down);
+                // CheckPunch(leftHand.transform, Vector3.up);
+                CheckPunch(rightHand.transform, Vector3.up);
             }
         }
     }

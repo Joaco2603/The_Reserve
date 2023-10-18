@@ -15,7 +15,7 @@ public class SpawnerControl : NetworkSingleton<SpawnerControl>
         Tree,
         TreeBroken,
         seed,
-        sweath
+        Sweath
     }
 
     [Serializable]
@@ -62,7 +62,7 @@ public class SpawnerControl : NetworkSingleton<SpawnerControl>
             for(int i = 0; i < PrewarmCount; i++)
             {
                 GameObject go = NetworkObjectPool.Instance.GetNetworkObject(Prefab).gameObject;
-                go.transform.position = position.position + new Vector3(0,0.5f,0);
+                go.transform.position = position.position + new Vector3(0,0.28f,0);
                 go.transform.rotation = rotation;
                 go.GetComponent<NetworkObject>().Spawn();
             }
@@ -142,6 +142,20 @@ public class SpawnerControl : NetworkSingleton<SpawnerControl>
         foreach (var item in spawnableItems)
         {
             if(item.Type == SpawnerControl.ObjectType.seed)
+            {
+                item.SpawnSeed(position,rotation);
+            }
+        }
+    }
+
+
+    public void PlantSweath(Transform position,Quaternion rotation)
+    {
+        if (!IsServer) return;
+
+        foreach (var item in spawnableItems)
+        {
+            if(item.Type == SpawnerControl.ObjectType.Sweath)
             {
                 item.SpawnSeed(position,rotation);
             }

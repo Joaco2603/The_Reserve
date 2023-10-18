@@ -26,6 +26,8 @@ public class Bank : NetworkBehaviour
     [SerializeField]  // Asignamos el tiempo que debe trascurrir
     private string endTimeString;
 
+    List<ulong> connectedClientIds;
+
     void Start()
     {
         if (IsServer)
@@ -85,14 +87,42 @@ public class Bank : NetworkBehaviour
             Debug.Log("Duración del evento: " + duration.ToString());
             Debug.Log("Tiempo terminado");
             puntaje = Puntaje.Instance;
+            // Copia las claves de los clientes conectados a una lista
+            connectedClientIds = new List<ulong>(NetworkManager.Singleton.ConnectedClients.Keys);
             if(puntaje.points.Value>100)
             {
                 Debug.Log("Ganaste");
+                // if (NetworkManager.Singleton.IsServer)
+                // {
+                //     // Disconnect all clients
+                //     foreach (ulong clientId in connectedClientIds)
+                //     {
+                //         NetworkManager.Singleton.DisconnectClient(clientId);
+                //     }
+                // }
+                // NetworkManager.Singleton.Shutdown();
+                // var UiManagement = UIManager.Instance;
+                // UiManagement.OffHideCanvas("timeline");
             }else{
                 Debug.Log("Perdiste");
+                // // Copia las claves de los clientes conectados a una lista
+                //  List<ulong> connectedClientIds = new List<ulong>(NetworkManager.Singleton.ConnectedClients.Keys);
+                // if (NetworkManager.Singleton.IsServer)
+                // {   
+                //     // Disconnect all clients
+                //     foreach (ulong clientId in connectedClientIds)
+                //     {
+                //         NetworkManager.Singleton.DisconnectClient(clientId);
+                //     }
+                // }
+                // NetworkManager.Singleton.Shutdown();
+                // var UiManagement = UIManager.Instance;
+                // UiManagement.OffHideCanvas("timelineBad");
             }
 
         }
     }
 }
+
+
 

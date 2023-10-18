@@ -7,7 +7,6 @@ public class ObjectsMove : NetworkBehaviour
 {
     public bool mode = false;
 	private bool YouCan = false;
-    private int speed = 2; 
 
     private float zRotation = 0; // Almacena la rotación acumulada en el eje Z
     Quaternion originalRotation;
@@ -16,9 +15,9 @@ public class ObjectsMove : NetworkBehaviour
 
 	Vector3 positionAfter;
 
-	Vector3 player = new Vector3(0.03f,-0.08f,3.45f);
-	Vector3 glass180 = new Vector3(0.02916622f,-0.335f,5.910002f);
-	Vector3 glass0 = new Vector3(0.02916622f,-0.335f,1.08f);
+	Transform player;
+	Transform glass180;
+	Transform glass0;
 
     
     public enum ObjectType
@@ -32,7 +31,25 @@ public class ObjectsMove : NetworkBehaviour
 
     void Start()
     {
-        originalRotation = transform.rotation;
+
+		if(this.objectType == ObjectType.Player)
+		{
+			Debug.Log("Entro Player");
+			Debug.Log(this.transform.position);
+			player = this.transform;
+		}
+		if(this.objectType == ObjectType.Glass180)
+		{
+			Debug.Log("Entro Glass180");
+			Debug.Log(this.transform.position);
+			glass180 = this.transform;
+		}
+		if(this.objectType == ObjectType.Glass0)
+		{
+			Debug.Log("Entro Glass0");
+			Debug.Log(this.transform.position);
+			glass0 = this.transform;
+		}
     }
 
     // Update is called once per frame
@@ -46,37 +63,39 @@ public class ObjectsMove : NetworkBehaviour
 
 	private void OnTriggerStay(Collider other)
 	{
-		Debug.Log(other);
 		var obj = other.gameObject.GetComponent<Floor>();
 		if(mode && obj != null)
         {
 			YouCan = true;
 		}
 		var colisionWithPlayer = other.gameObject.tag;
-		Debug.Log(colisionWithPlayer);
-		if(mode && colisionWithPlayer == "Puzzle")
+		if(mode && Input.GetKeyDown(KeyCode.W) && colisionWithPlayer == "Puzzle")
 		{
-			Debug.Log("Colision con ObjectsMove detectada.");
-        	if (objectType == ObjectType.Player)
+			var tagsObjects = GameObject.FindGameObjectsWithTag("Puzzle");
+
+			foreach(var tags in tagsObjects)
 			{
-				restart(player);
-			}
-			if(objectType == ObjectType.Glass180)
-			{
-				restart(glass180);
-			}
-			if(objectType == ObjectType.Glass0)
-			{
-				restart(glass0);
+				Debug.Log(tags.GetComponent<ObjectsMove>().objectType);
+				if(tags.GetComponent<ObjectsMove>().objectType == ObjectType.Player && tags.GetComponent<ObjectsMove>() != null)
+				{
+					restart(player);
+				}
+				if(tags.GetComponent<ObjectsMove>().objectType == ObjectType.Glass180 && tags.GetComponent<ObjectsMove>() != null)
+				{
+					restart(glass180);
+				}
+				if(tags.GetComponent<ObjectsMove>().objectType == ObjectType.Glass0 && tags.GetComponent<ObjectsMove>() != null)
+				{
+					restart(glass0);
+				}
 			}
 		}
 	}
 
-	private void restart(Vector3 vector3)
+	private void restart(Transform newPosition)
 	{
-		this.transform.position = vector3;
+		this.transform.position = newPosition.position;
 	}
-
 
 	private void OnTriggerExit(Collider other)
 	{
@@ -123,16 +142,13 @@ public class ObjectsMove : NetworkBehaviour
             transform.Rotate(0, 0, -zRotation, Space.Self); // Rota en torno al eje Y  del  mundo hacia la derecha.
         }
 
-
-		if (objectType == ObjectType.Player || objectType == ObjectType.Glass0)
+		//objectType == ObjectType.Player ||
+		//objectType == ObjectType.Player ||  
+		if (objectType == ObjectType.Glass0)
 		{
-			RotationUpdate(1);
+			transform.rotation = Quaternion.Euler(0, zRotation,0);
 		}else{
-			RotationUpdate(-1);
+			transform.rotation = Quaternion.Euler(0,-180 + zRotation,0);
 		}	
     }
-	private void RotationUpdate(int sign)
-	{
-		transform.rotation = Quaternion.Euler(originalRotation.eulerAngles.x, sign * zRotation, originalRotation.eulerAngles.z);
-	}
 }

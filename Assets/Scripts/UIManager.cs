@@ -3,6 +3,7 @@ using TMPro;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class UIManager : Singleton<UIManager>
 {
@@ -21,6 +22,21 @@ public class UIManager : Singleton<UIManager>
     [SerializeField]
     private TMP_InputField joinCodeInput;
 
+    [SerializeField]
+    private Button ButtonMore;
+
+    [SerializeField]
+    private Button ButtonExit;
+
+    [SerializeField]
+    private TextMeshProUGUI StringWinCodition;
+
+    [SerializeField]
+    private Image restarMenu;
+
+    private string timeliType;
+
+
     // [SerializeField]
     // private Button executePhysicsButton;
 
@@ -38,6 +54,9 @@ public class UIManager : Singleton<UIManager>
 
     void Start()
     {
+        
+        hideCanvas();
+
         // START SERVER
         startServerButton?.onClick.AddListener(() =>
         {
@@ -85,14 +104,36 @@ public class UIManager : Singleton<UIManager>
             hasServerStarted = true;
         };
 
-        // executePhysicsButton.onClick.AddListener(() => 
+        // ButtonMore?.onClick.AddListener(() =>
         // {
-        //     if (!hasServerStarted)
-        //     {
-        //         Logger.Instance.LogWarning("Server has not started...");
-        //         return;
-        //     }
-        //     SpawnerControl.Instance.SpawnObjects();
+        //     SceneManager.LoadScene(timeliType);
         // });
     }
+
+    private void hideCanvas()
+    {
+
+        // ButtonMore.gameObject.SetActive(false);
+
+        // ButtonExit.gameObject.SetActive(false);
+
+        // StringWinCodition.enabled = false;
+
+        // restarMenu.enabled = false;
+    }
+
+
+    public void OffHideCanvas(string timelineChoose)
+    {
+        // ButtonMore.gameObject.SetActive(true);
+
+        // ButtonExit.gameObject.SetActive(true);
+
+        // StringWinCodition.enabled = true;
+
+        // restarMenu.enabled = true;
+
+        // timeliType = timelineChoose;
+    }
+
 }

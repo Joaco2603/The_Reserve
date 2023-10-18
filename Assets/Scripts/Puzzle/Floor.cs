@@ -7,10 +7,4 @@ public class Floor : NetworkBehaviour
 {
     [SerializeField]
     private bool isWalking = true;
-    [SerializeField] 
-    private bool WinCondition = false;
-
-    // public int vectorY;
-
-    // public int vectorX;
 }

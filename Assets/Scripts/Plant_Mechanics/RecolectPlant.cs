@@ -27,7 +27,13 @@ public class RecolectPlant : NetworkBehaviour
             if(isReady) return;
             isReady = true;
             PlantServerRpc();
+            Invoke("ReloadPlant",5f);
         }
+    }
+
+    private void ReloadPlant()
+    {
+        isReady = false;
     }
 
     [ServerRpc(RequireOwnership = false)]

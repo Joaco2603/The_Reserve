@@ -18,14 +18,13 @@ public class Trunk : NetworkBehaviour
 
         rb = this.GetComponent<Rigidbody>();
 
-
         Invoke("Disable",1f);
     }
 
     void Disable()
     {
         rb.useGravity = false;
-
+        rb.isKinematic = false;
         collider.isTrigger = true;
     }
 
@@ -53,6 +52,10 @@ public class Trunk : NetworkBehaviour
     [ClientRpc]
     private void CallReturnNetworkClientRpc()
     {
+
+        var callSound = CallSound.Instance;
+        // Reproducir el sonido
+        callSound.PlaySoundEffect();
 
         var spawnControl = SpawnerControl.Instance;
         spawnControl.RespawnTree(this.transform,this.transform.rotation);

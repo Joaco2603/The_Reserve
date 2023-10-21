@@ -78,6 +78,7 @@ public class ObjectsMove : NetworkBehaviour
 				Debug.Log(tags.GetComponent<ObjectsMove>().objectType);
 				if(tags.GetComponent<ObjectsMove>().objectType == ObjectType.Player && tags.GetComponent<ObjectsMove>() != null)
 				{
+					Debug.Log("Entro al player");
 					restart(player);
 				}
 				if(tags.GetComponent<ObjectsMove>().objectType == ObjectType.Glass180 && tags.GetComponent<ObjectsMove>() != null)
@@ -92,9 +93,21 @@ public class ObjectsMove : NetworkBehaviour
 		}
 	}
 
+	private void OnCollisionStay(Collision other)
+	{
+		var obj = other.gameObject.GetComponent<Floor>();
+		if(obj.Winner && other.gameObject.GetComponent<ObjectsMove>().objectType == ObjectType.Glass0 && other.gameObject.GetComponent<ObjectsMove>().objectType == ObjectType.Glass180)
+		{
+			var puntaje = Puntaje.Instance;
+            puntaje.points.Value += 50;
+			mode = false;
+		}
+	}
+
 	private void restart(Transform newPosition)
 	{
-		this.transform.position = newPosition.position;
+		Debug.Log("Restart");
+		this.transform.position = newPosition.position + new Vector3(0,10,0);
 	}
 
 	private void OnTriggerExit(Collider other)

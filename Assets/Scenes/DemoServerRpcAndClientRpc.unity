@@ -451,6 +451,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isWalking: 1
+  Winner: 0
 --- !u!54 &64857924
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -1083,6 +1084,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isWalking: 1
+  Winner: 0
 --- !u!54 &169093092
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -1790,6 +1792,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isWalking: 1
+  Winner: 0
 --- !u!54 &202919182
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -2384,6 +2387,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isWalking: 1
+  Winner: 0
 --- !u!54 &284243554
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -2663,6 +2667,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isWalking: 1
+  Winner: 0
 --- !u!54 &296540083
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -2876,6 +2881,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isWalking: 1
+  Winner: 0
 --- !u!54 &308704266
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -3310,6 +3316,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isWalking: 1
+  Winner: 0
 --- !u!54 &329057715
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -3609,6 +3616,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isWalking: 1
+  Winner: 0
 --- !u!54 &352294352
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -5260,6 +5268,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isWalking: 1
+  Winner: 0
 --- !u!54 &514364596
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -5387,6 +5396,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isWalking: 1
+  Winner: 0
 --- !u!54 &516857993
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -7330,6 +7340,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isWalking: 1
+  Winner: 0
 --- !u!54 &823024634
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -7760,6 +7771,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isWalking: 1
+  Winner: 0
 --- !u!54 &911730766
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -8216,10 +8228,12 @@ GameObject:
   - component: {fileID: 963194228}
   - component: {fileID: 963194227}
   - component: {fileID: 963194226}
+  - component: {fileID: 963194233}
   - component: {fileID: 963194229}
   - component: {fileID: 963194230}
   - component: {fileID: 963194231}
   - component: {fileID: 963194232}
+  - component: {fileID: 963194234}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -8411,6 +8425,115 @@ MonoBehaviour:
   m_RequiresDepthTexture: 0
   m_RequiresColorTexture: 0
   m_Version: 2
+--- !u!82 &963194233
+AudioSource:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 963194225}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 0}
+  m_audioClip: {fileID: 8300000, guid: bded1af47b2ffbc488221f74a8a52fcf, type: 3}
+  m_PlayOnAwake: 1
+  m_Volume: 0.2
+  m_Pitch: 1
+  Loop: 1
+  Mute: 0
+  Spatialize: 0
+  SpatializePostEffects: 0
+  Priority: 128
+  DopplerLevel: 1
+  MinDistance: 1
+  MaxDistance: 500
+  Pan2D: 0
+  rolloffMode: 0
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+--- !u!114 &963194234
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 963194225}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6b0a689c29173564799eab4fb9b82e57, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  soundEffect: {fileID: 8300000, guid: c9c1db39a2e4b0d4b9c9664629b67b9d, type: 3}
 --- !u!1 &963411886 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 8582293574316785276, guid: 4da2eddaaf302a34d8b2eafd0fb1720b, type: 3}
@@ -9363,6 +9486,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isWalking: 1
+  Winner: 0
 --- !u!54 &1077336682
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -11852,6 +11976,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isWalking: 1
+  Winner: 0
 --- !u!54 &1515241651
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -12394,6 +12519,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isWalking: 1
+  Winner: 0
 --- !u!54 &1548826469
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -12714,6 +12840,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isWalking: 1
+  Winner: 0
 --- !u!54 &1581001674
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -13933,6 +14060,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isWalking: 1
+  Winner: 0
 --- !u!54 &1677067946
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -14060,6 +14188,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isWalking: 1
+  Winner: 0
 --- !u!54 &1690591063
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -14642,6 +14771,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isWalking: 0
+  Winner: 0
 --- !u!54 &1770741648
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -17186,6 +17316,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isWalking: 1
+  Winner: 0
 --- !u!54 &2091348052
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -17379,6 +17510,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isWalking: 1
+  Winner: 0
 --- !u!54 &2110148374
 Rigidbody:
   m_ObjectHideFlags: 0

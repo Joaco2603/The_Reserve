@@ -5,6 +5,7 @@ using Unity.Netcode;
 
 public class Floor : NetworkBehaviour
 {
-    [SerializeField]
-    private bool isWalking = true;
+    public bool isWalking = true;
+
+    public bool Winner = false;
 }

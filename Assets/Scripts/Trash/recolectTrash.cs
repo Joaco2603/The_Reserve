@@ -44,6 +44,9 @@ public class recolectTrash : NetworkBehaviour
         {
             puntaje = Puntaje.Instance;
             puntaje.points.Value += 10;
+            var callSound = CallSound.Instance;
+            // Reproducir el sonido
+            callSound.PlaySoundEffect();
             Debug.Log(puntaje.points.Value);
             objectPool = NetworkObjectPool.Instance;
             objectPool.ReturnNetworkObject(targetObject, targetObject.gameObject);

@@ -7,7 +7,9 @@ public class SeedPlants : NetworkBehaviour
 {
 
     private bool status = false;
+
     private int number = 0;
+    
     
     void Start()
     {
@@ -23,7 +25,7 @@ public class SeedPlants : NetworkBehaviour
 
     private void OnTriggerStay(Collider other)
     {
-        if(Input.GetKey(KeyCode.E))
+        if(Input.GetAxis("Fire1") > 0)
         {
             TimerButton();
         }
@@ -31,16 +33,12 @@ public class SeedPlants : NetworkBehaviour
         {
             if(number>=100)
             {
-                number = 0;
+                status = true;
             }
-        }
-        if(number>=100)
-        {
-            status = true;
-        }
-        else
-        {
-            status = false;
+            else
+            {
+                status = false;
+            }
         }
     }
 
@@ -49,7 +47,7 @@ public class SeedPlants : NetworkBehaviour
     {
         while (true)
         {
-            yield return new WaitForSeconds(20);
+            yield return new WaitForSeconds(7);
             if(status)
             {
                 PlantsServerRpc();
@@ -71,6 +69,9 @@ public class SeedPlants : NetworkBehaviour
     [ClientRpc]
     private void PlantsClientRpc()
     {
+        var callSound = CallSound.Instance;
+        // Reproducir el sonido
+        callSound.PlaySoundEffect();
         var objectPool = NetworkObjectPool.Instance;
         objectPool.ReturnNetworkObject(this.NetworkObject,this.gameObject);
         var spawner = SpawnerControl.Instance;

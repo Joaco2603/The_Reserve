@@ -4,6 +4,7 @@ using System.Runtime.CompilerServices;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.Assertions;
+using UnityEngine.InputSystem;
 
 
 public class recolectRecicle : NetworkBehaviour
@@ -12,12 +13,18 @@ public class recolectRecicle : NetworkBehaviour
     public GameObject pickedObject = null;
     private Recicle recicleComponent;
     private NetworkObject networkObject;
+    private PlayerInput _playerInput;
 
+    void Start()
+    {
+        _playerInput = GetComponent<PlayerInput>();
+    }
+    
     void FixedUpdate()
     {
         if(pickedObject != null)
         {
-            if(Input.GetKey(KeyCode.X) && NetworkObject.IsLocalPlayer)
+            if(_playerInput.actions["DeselectRecycle"].ReadValue<float>() > 0 && NetworkObject.IsLocalPlayer)
             {
                 // Solicita al servidor cambiar el parentesco
                 NetworkObject otherNetworkObject = pickedObject.gameObject.GetComponent<NetworkObject>();
@@ -68,7 +75,7 @@ public class recolectRecicle : NetworkBehaviour
         recicleComponent = other.gameObject.GetComponent<Recicle>();
         if (recicleComponent != null && networkObject.IsSpawned)
         {
-            if (Input.GetKey(KeyCode.C) && this.gameObject.GetComponentInChildren<Recicle>() == null && NetworkObject.IsLocalPlayer)
+            if (_playerInput.actions["CollectRecycle"].ReadValue<float>() > 0 && this.gameObject.GetComponentInChildren<Recicle>() == null && NetworkObject.IsLocalPlayer)
             {
                 // Solicita al servidor cambiar el parentesco y la nueva posicion
                 NetworkObject otherNetworkObject = other.gameObject.GetComponent<NetworkObject>();

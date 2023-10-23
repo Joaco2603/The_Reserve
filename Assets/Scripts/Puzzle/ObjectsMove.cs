@@ -107,7 +107,7 @@ public class ObjectsMove : NetworkBehaviour
 	private void restart(Transform newPosition)
 	{
 		Debug.Log("Restart");
-		this.transform.position = newPosition.position + new Vector3(0,10,0);
+		// this.transform.position = newPosition.position;
 	}
 
 	private void OnTriggerExit(Collider other)

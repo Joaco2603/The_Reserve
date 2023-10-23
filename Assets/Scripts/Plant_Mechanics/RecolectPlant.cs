@@ -2,6 +2,7 @@ using Unity.Netcode;
 using Unity.Netcode.Components;
 using UnityEngine;
 using System.Collections.Generic;
+using UnityEngine.InputSystem;
 
 public class RecolectPlant : NetworkBehaviour
 {
@@ -13,16 +14,22 @@ public class RecolectPlant : NetworkBehaviour
     private Transform position;
     private Quaternion rotation;
 
+    private PlayerInput _playerInput;
+
+
     private void OnTriggerStay(Collider other) 
     {
+
+        if (!IsClient && !IsOwner) return;
+        var controller = other.GetComponent<PlayerInput>();
         var player = other.gameObject.GetComponent<PlayerHud>();
         var ObjectNet = other.gameObject.GetComponent<NetworkObject>();
-        if(Input.GetKey(KeyCode.E) && player != null && ObjectNet != null && Type)
+        if(controller != null && controller.actions["collect"].ReadValue<float>() > 0 && player != null && ObjectNet != null && Type)
         {
             RecolectServerRpc();
         }
 
-        if(Input.GetKey(KeyCode.Q) && player != null && ObjectNet != null && this.transform.childCount == 0 && !Type)
+        if(player != null && ObjectNet != null && this.transform.childCount == 0 && !Type && controller.actions["collect"].ReadValue<float>() > 0 )
         {
             if(isReady) return;
             isReady = true;

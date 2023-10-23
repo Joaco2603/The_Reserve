@@ -1,6 +1,8 @@
 using Unity.Netcode;
 using Unity.Netcode.Components;
 using UnityEngine;
+using UnityEngine.InputSystem;
+
 
 [RequireComponent(typeof(NetworkTransform))]
 [RequireComponent(typeof(NetworkObject))]
@@ -47,6 +49,8 @@ public class PlayerWithRaycastControl : NetworkBehaviour
 
     private CharacterController characterController;
 
+    public bool GameMode = false;
+
     // client caches positions
     private Vector3 oldInputPosition = Vector3.zero;
     private Vector3 oldInputRotation = Vector3.zero;
@@ -58,17 +62,20 @@ public class PlayerWithRaycastControl : NetworkBehaviour
     private Vector3 treePosition;
     private Quaternion treeRotation;
 
+    private PlayerInput _playerInput;
+
     private void Awake()
     {
         characterController = GetComponent<CharacterController>();
         animator = GetComponent<Animator>();
-
+        _playerInput = GetComponent<PlayerInput>();
     }
 
     void Start()
     {
         if (IsClient && IsOwner)
         {
+
             transform.position = new Vector3(Random.Range(defaultInitialPositionOnPlane.x, defaultInitialPositionOnPlane.y), 0,
                    Random.Range(defaultInitialPositionOnPlane.x, defaultInitialPositionOnPlane.y));
 
@@ -98,6 +105,7 @@ public class PlayerWithRaycastControl : NetworkBehaviour
             }
         }
     }
+
 
     private void CheckPunch(Transform hand, Vector3 aimDirection)
     {
@@ -150,12 +158,18 @@ public class PlayerWithRaycastControl : NetworkBehaviour
 
     private void ClientInput()
     {
+
+        if(GameMode) return;
+
         // left & right rotation
-        Vector3 inputRotation = new Vector3(0, Input.GetAxis("Horizontal"), 0);
+        // Suponiendo que tienes una acción "Horizontal" configurada en tu Input Action Map.
+        Vector2 rotationInput = _playerInput.actions["Move"].ReadValue<Vector2>();
+        Vector3 inputRotation = new Vector3(0, rotationInput.x, 0); // Usamos solo la entrada en el eje X para la rotación en Y
 
         // forward & backward direction
         Vector3 direction = transform.TransformDirection(Vector3.forward);
-        float forwardInput = Input.GetAxis("Vertical");
+        // Suponiendo que tienes una acción "Vertical" configurada en tu Input Action Map.
+        float forwardInput = _playerInput.actions["Move"].ReadValue<Vector2>().y;
         Vector3 inputPosition = direction * forwardInput;
 
         // change fighting states
@@ -163,6 +177,12 @@ public class PlayerWithRaycastControl : NetworkBehaviour
         {
             UpdatePlayerStateServerRpc(PlayerState.Punch);
             return;
+        }
+    
+        //_playerInput.actions["Seed"].ReadValue<float>() > 0
+        if(Input.GetKeyDown(KeyCode.Q))
+        {
+            UpdatePlayerStateServerRpc(PlayerState.Water);
         }
 
         // change motion states
@@ -176,7 +196,9 @@ public class PlayerWithRaycastControl : NetworkBehaviour
             UpdatePlayerStateServerRpc(PlayerState.Run);
         }
         else if (forwardInput < 0)
+        {
             UpdatePlayerStateServerRpc(PlayerState.ReverseWalk);
+        }
 
         // let server know about position and rotation client changes
         if (oldInputPosition != inputPosition ||
@@ -188,14 +210,34 @@ public class PlayerWithRaycastControl : NetworkBehaviour
         }
     }
 
-    private static bool ActiveRunningActionKey()
+    private bool ActiveRunningActionKey()
     {
-        return Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift);
+        bool status;
+        if(_playerInput.actions["Run"].ReadValue<float>() > 0)
+        {
+            status = true;
+        }
+        else
+        {
+            status = false;
+        }
+
+        return status;
     }
 
-    private static bool ActivePunchActionKey()
+    private bool ActivePunchActionKey()
     {
-        return Input.GetKey(KeyCode.Space);
+        bool status;
+        if(_playerInput.actions["Hit"].ReadValue<float>() > 0)
+        {
+            status = true;
+        }
+        else
+        {
+            status = false;
+        }
+
+        return status;
     }
 
     [ServerRpc]
@@ -235,7 +277,6 @@ public class PlayerWithRaycastControl : NetworkBehaviour
                 }
             });
         }
-
     }
 
     [ClientRpc]
@@ -260,10 +301,11 @@ public class PlayerWithRaycastControl : NetworkBehaviour
     [ServerRpc]
     public void UpdatePlayerStateServerRpc(PlayerState state)
     {
+        Debug.Log(state);
         networkPlayerState.Value = state;
         if (state == PlayerState.Punch)
         {
-            networkPlayerPunchBlend.Value = Random.Range(0.0f, 1.0f);
+            networkPlayerPunchBlend.Value = Random.Range(0.0f, 2.0f);
         }
     }
 }

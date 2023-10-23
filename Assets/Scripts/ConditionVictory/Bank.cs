@@ -5,6 +5,7 @@ using System.Runtime.CompilerServices;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.Assertions;
+using UnityEngine.SceneManagement;
 
 
 public class Bank : NetworkBehaviour
@@ -54,14 +55,15 @@ public class Bank : NetworkBehaviour
         EndEvent();
     }
 
-    void EndEvent()
+    [ClientRpc]
+    void EndEventClientRPC()
     {
         endTime = DateTime.Now;
         endTimeString = endTime.ToString();
         Debug.Log("Evento finalizado a las: " + endTimeString);
         duration = endTime - startTime;
 
-        EndEventClientRPC();
+        EndEvent();
     }
 
     // RPC para notificar a todos los clientes que el evento ha comenzado
@@ -77,8 +79,7 @@ public class Bank : NetworkBehaviour
     }
 
     // RPC para notificar a todos los clientes que el evento ha terminado
-    [ClientRpc]
-    void EndEventClientRPC()
+    void EndEvent()
     {
         if (IsClient)
         {
@@ -87,41 +88,43 @@ public class Bank : NetworkBehaviour
             Debug.Log("Duración del evento: " + duration.ToString());
             Debug.Log("Tiempo terminado");
             puntaje = Puntaje.Instance;
-            // Copia las claves de los clientes conectados a una lista
-            connectedClientIds = new List<ulong>(NetworkManager.Singleton.ConnectedClients.Keys);
+        if (IsServer)
+        { 
             if(puntaje.points.Value>100)
             {
                 Debug.Log("Ganaste");
-                // if (NetworkManager.Singleton.IsServer)
-                // {
-                //     // Disconnect all clients
-                //     foreach (ulong clientId in connectedClientIds)
-                //     {
-                //         NetworkManager.Singleton.DisconnectClient(clientId);
-                //     }
-                // }
-                // NetworkManager.Singleton.Shutdown();
-                // var UiManagement = UIManager.Instance;
-                // UiManagement.OffHideCanvas("timeline");
+                // var sceneManagementNetworkBehaviour = SceneManagementNetworkBehaviour.Instance;
+                // sceneManagementNetworkBehaviour.ChangeSceneServerRpc(true);
+                DisconnectAllClientsAndStopServer(true);
             }else{
                 Debug.Log("Perdiste");
-                // // Copia las claves de los clientes conectados a una lista
-                //  List<ulong> connectedClientIds = new List<ulong>(NetworkManager.Singleton.ConnectedClients.Keys);
-                // if (NetworkManager.Singleton.IsServer)
-                // {   
-                //     // Disconnect all clients
-                //     foreach (ulong clientId in connectedClientIds)
-                //     {
-                //         NetworkManager.Singleton.DisconnectClient(clientId);
-                //     }
-                // }
-                // NetworkManager.Singleton.Shutdown();
-                // var UiManagement = UIManager.Instance;
-                // UiManagement.OffHideCanvas("timelineBad");
+                // var sceneManagementNetworkBehaviour = SceneManagementNetworkBehaviour.Instance;
+                // sceneManagementNetworkBehaviour.ChangeSceneServerRpc(false);
+                DisconnectAllClientsAndStopServer(false);
             }
-
+        }
         }
     }
+
+    
+    private void DisconnectAllClientsAndStopServer(bool state)
+    {
+        foreach (var client in NetworkManager.Singleton.ConnectedClientsList)
+        {
+            if (client.ClientId != NetworkManager.Singleton.ServerClientId) //Evita desconectar el host
+            {
+                NetworkManager.Singleton.DisconnectClient(client.ClientId);
+            }
+        }
+        NetworkManager.Singleton.Shutdown();
+
+        string stateString;
+        stateString = state ? "timeline" : "timelineBad";
+
+        SceneManager.LoadScene(stateString);
+    }
+
+
 }
 
 

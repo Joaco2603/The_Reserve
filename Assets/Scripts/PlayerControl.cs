@@ -102,7 +102,12 @@ public class PlayerControl : NetworkBehaviour
             UpdatePlayerStateServerRpc(PlayerState.Run);
         }
         else if (forwardInput < 0)
+        {
             UpdatePlayerStateServerRpc(PlayerState.ReverseWalk);
+        }
+        else if(Input.GetKey(KeyCode.Q) && forwardInput == 0)
+            UpdatePlayerStateServerRpc(PlayerState.Water);
+            Debug.Log(PlayerState.Water);
 
         // let server know about position and rotation client changes
         if (oldInputPosition != inputPosition ||

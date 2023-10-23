@@ -85,7 +85,13 @@ public class PlayerControlAuthorative : NetworkBehaviour
             UpdatePlayerStateServerRpc(PlayerState.Run);
         }
         else if (forwardInput < 0)
+        {
             UpdatePlayerStateServerRpc(PlayerState.ReverseWalk);
+        }
+        else if(Input.GetKey(KeyCode.Q))
+        {
+            UpdatePlayerStateServerRpc(PlayerState.Water);
+        }
 
         // client is responsible for moving itself
         characterController.SimpleMove(inputPosition * walkSpeed);

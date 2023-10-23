@@ -2,6 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.Netcode;
 using UnityEngine;
+using UnityEngine.InputSystem;
+
 
 public class SeedPlants : NetworkBehaviour
 {
@@ -10,7 +12,10 @@ public class SeedPlants : NetworkBehaviour
 
     private int number = 0;
     
-    
+    private PlayerInput _playerInput;
+    private PlayerWithRaycastControl player;
+
+
     void Start()
     {
         StartCoroutine(RepeatFunction());
@@ -20,12 +25,15 @@ public class SeedPlants : NetworkBehaviour
     private void TimerButton()
     {
         number += 1;
-        Debug.Log(number);
     }
 
     private void OnTriggerStay(Collider other)
     {
-        if(Input.GetAxis("Fire1") > 0)
+
+        if (!IsClient && !IsOwner) return;
+        var player = other.GetComponent<PlayerWithRaycastControl>();
+        var controller = other.GetComponent<PlayerInput>();
+        if(controller != null && player != null && controller.actions["Seed"].ReadValue<float>() > 0)
         {
             TimerButton();
         }

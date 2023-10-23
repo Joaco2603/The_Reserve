@@ -9,9 +9,16 @@ public class StartPuzzle : NetworkBehaviour
     private bool mode = false;
     private ObjectsMove[] allObjectMoves;
 
+    public Camera firstCamera; // Asigna la primera cámara aquí a través del inspector
+    public Camera secondCamera; // Asigna la segunda cámara aquí a través del inspector
+    public float transitionDuration = 0.5f; // Duración de la transición en segundos
+
+    private PlayerWithRaycastControl player;
+
+
     private void OnTriggerStay(Collider other) 
     {
-        if(Input.GetKey(KeyCode.E))
+        if(Input.GetKey(KeyCode.E) && IsClient && IsOwner)
         {
             var callSound = CallSound.Instance;
             // Reproducir el sonido
@@ -19,12 +26,16 @@ public class StartPuzzle : NetworkBehaviour
             // Encuentra todos los objetos con el componente ObjectsMove
             allObjectMoves = GameObject.FindObjectsOfType<ObjectsMove>();
 
+            player = GameObject.FindObjectsOfType<PlayerWithRaycastControl>()[0];
+
             // Para cada objeto con el componente ObjectsMove, cambia mode a true
             foreach (ObjectsMove objectMove in allObjectMoves)
             {
                 objectMove.mode = true;
             }
+            player.GameMode = true;
             mode = true;
+            StartCoroutine(Transition(false,true));
         }
 
         if(Input.GetKey(KeyCode.Q) && mode)
@@ -33,6 +44,37 @@ public class StartPuzzle : NetworkBehaviour
             {
                 objectMove.mode = false;
             }
+            player = GameObject.FindObjectsOfType<PlayerWithRaycastControl>()[0];
+            player.GameMode = false;
+            StartCoroutine(Transition(true,false));
         }
+    }
+
+    IEnumerator Transition(bool firstBoolean,bool SecondBoolean)
+    {
+        float t = 0.0f;
+        Vector3 startPosition = firstCamera.transform.position;
+        Quaternion startRotation = firstCamera.transform.rotation;
+
+        while (t < 1.0f)
+        {
+            t += Time.deltaTime * (1.0f / transitionDuration);
+
+            // Interpolación entre las posiciones de las cámaras
+            firstCamera.transform.position = Vector3.Lerp(startPosition, secondCamera.transform.position, t);
+            // Interpolación entre las rotaciones de las cámaras
+            firstCamera.transform.rotation = Quaternion.Slerp(startRotation, secondCamera.transform.rotation, t);
+
+            // Esperar hasta el próximo frame
+            yield return null;
+        }
+
+        // Desactivar la primera cámara y activar la segunda
+        firstCamera.enabled = firstBoolean;
+        secondCamera.enabled = SecondBoolean;
+
+        // Opcionalmente, mover la primera cámara de regreso a su posición inicial
+        firstCamera.transform.position = startPosition;
+        firstCamera.transform.rotation = startRotation;
     }
 }

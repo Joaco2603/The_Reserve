@@ -18,20 +18,22 @@ public class StartPuzzle : NetworkBehaviour
 
     private void OnTriggerStay(Collider other) 
     {
-        if(Input.GetKey(KeyCode.E) && IsClient && IsOwner)
+        if(Input.GetKey(KeyCode.E) && IsClient)
         {
+            Debug.Log("E");
             var callSound = CallSound.Instance;
             // Reproducir el sonido
             callSound.PlaySoundEffect();
             // Encuentra todos los objetos con el componente ObjectsMove
             allObjectMoves = GameObject.FindObjectsOfType<ObjectsMove>();
 
-            player = GameObject.FindObjectsOfType<PlayerWithRaycastControl>()[0];
+            player = other.gameObject.GetComponent<PlayerWithRaycastControl>();
 
             // Para cada objeto con el componente ObjectsMove, cambia mode a true
             foreach (ObjectsMove objectMove in allObjectMoves)
             {
                 objectMove.mode = true;
+                objectMove.playerInUse = this.gameObject.GetComponent<NetworkObject>().OwnerClientId;
             }
             player.GameMode = true;
             mode = true;
@@ -44,7 +46,7 @@ public class StartPuzzle : NetworkBehaviour
             {
                 objectMove.mode = false;
             }
-            player = GameObject.FindObjectsOfType<PlayerWithRaycastControl>()[0];
+            player = other.gameObject.GetComponent<PlayerWithRaycastControl>();
             player.GameMode = false;
             StartCoroutine(Transition(true,false));
         }

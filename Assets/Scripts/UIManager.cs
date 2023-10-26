@@ -128,6 +128,11 @@ public class UIManager : NetworkSingleton<UIManager>
     // });
 
 
+
+        //if (NetworkManager.Singleton.IsListening && NetworkManager.Singleton.IsHost)
+        //{
+            // Un host ha sido iniciado y está escuchando conexiones entrantes
+        //}
         
         
 

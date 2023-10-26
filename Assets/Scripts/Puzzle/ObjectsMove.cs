@@ -13,13 +13,17 @@ public class ObjectsMove : NetworkBehaviour
 
     Floor floorObject;
 
-	Vector3 positionAfter;
+	[SerializeField]
+	private Vector3 initialPosition;
 
 	Transform player;
 	Transform glass180;
 	Transform glass0;
 
-    
+	public ulong playerInUse;
+
+	private HashSet<ObjectType> objectsInContact = new HashSet<ObjectType>();
+
     public enum ObjectType
     {
         Player,
@@ -29,35 +33,22 @@ public class ObjectsMove : NetworkBehaviour
     
     public ObjectType objectType;
 
-    void Start()
-    {
-
-		if(this.objectType == ObjectType.Player)
-		{
-			Debug.Log("Entro Player");
-			Debug.Log(this.transform.position);
-			player = this.transform;
-		}
-		if(this.objectType == ObjectType.Glass180)
-		{
-			Debug.Log("Entro Glass180");
-			Debug.Log(this.transform.position);
-			glass180 = this.transform;
-		}
-		if(this.objectType == ObjectType.Glass0)
-		{
-			Debug.Log("Entro Glass0");
-			Debug.Log(this.transform.position);
-			glass0 = this.transform;
-		}
-    }
-
     // Update is called once per frame
     void Update()
     {
-        if(mode && IsClient && IsOwner)
+        if (mode && YouCan && Input.GetKeyDown(KeyCode.W))
         {
-            MoveObjects();
+            MoveObjectServerRpc();
+        }
+
+        if (mode && Input.GetKeyDown(KeyCode.A))
+        {
+            RotateObjectLeftServerRpc();
+        }
+
+        if (mode && Input.GetKeyDown(KeyCode.D))
+        {
+            RotateObjectRightServerRpc();
         }
     }
 
@@ -73,42 +64,67 @@ public class ObjectsMove : NetworkBehaviour
 		{
 			var tagsObjects = GameObject.FindGameObjectsWithTag("Puzzle");
 
-			foreach(var tags in tagsObjects)
+			foreach (var tags in tagsObjects)
 			{
-				Debug.Log(tags.GetComponent<ObjectsMove>().objectType);
-				if(tags.GetComponent<ObjectsMove>().objectType == ObjectType.Player && tags.GetComponent<ObjectsMove>() != null)
-				{
-					Debug.Log("Entro al player");
-					restart(player);
-				}
-				if(tags.GetComponent<ObjectsMove>().objectType == ObjectType.Glass180 && tags.GetComponent<ObjectsMove>() != null)
-				{
-					restart(glass180);
-				}
-				if(tags.GetComponent<ObjectsMove>().objectType == ObjectType.Glass0 && tags.GetComponent<ObjectsMove>() != null)
-				{
-					restart(glass0);
-				}
+    		ObjectsMove objMove = tags.GetComponent<ObjectsMove>();
+    		if (objMove != null)
+    		{
+    		    Debug.Log(objMove.objectType);
+    		    switch (objMove.objectType)
+    		    {
+    		        case ObjectType.Player:
+    		        case ObjectType.Glass180:
+    		        case ObjectType.Glass0:
+    		            restartServerRpc();
+    		            break;
+        		}
+    		}
 			}
 		}
 	}
 
-	private void OnCollisionStay(Collision other)
+	[ServerRpc(RequireOwnership = false)]
+	private void restartServerRpc()
 	{
-		var obj = other.gameObject.GetComponent<Floor>();
-		if(obj.Winner && other.gameObject.GetComponent<ObjectsMove>().objectType == ObjectType.Glass0 && other.gameObject.GetComponent<ObjectsMove>().objectType == ObjectType.Glass180)
-		{
-			var puntaje = Puntaje.Instance;
-            puntaje.points.Value += 50;
-			mode = false;
-		}
+	        if (initialPosition != null)
+	        {
+	            transform.position = initialPosition;
+	        }
 	}
 
-	private void restart(Transform newPosition)
-	{
-		Debug.Log("Restart");
-		// this.transform.position = newPosition.position;
-	}
+
+
+private void OnCollisionEnter(Collision other)
+{
+    var objMove = other.gameObject.GetComponent<ObjectsMove>();
+    if (objMove != null)
+    {
+        objectsInContact.Add(objMove.objectType);
+    }
+    CheckForWinnerCondition(other);
+}
+
+private void OnCollisionExit(Collision other)
+{
+    var objMove = other.gameObject.GetComponent<ObjectsMove>();
+    if (objMove != null)
+    {
+        objectsInContact.Remove(objMove.objectType);
+    }
+}
+
+private void CheckForWinnerCondition(Collision other)
+{
+    var floor = other.gameObject.GetComponent<Floor>();
+    if (floor != null && floor.Winner && 
+        objectsInContact.Contains(ObjectType.Glass0) && 
+        objectsInContact.Contains(ObjectType.Glass180))
+    {
+        var puntaje = Puntaje.Instance;
+        puntaje.points.Value += 50;
+        mode = false;
+    }
+}
 
 	private void OnTriggerExit(Collider other)
 	{
@@ -119,49 +135,43 @@ public class ObjectsMove : NetworkBehaviour
 	}
 
 
-    private void MoveObjects()
+	[ServerRpc(RequireOwnership = false)]
+    private void MoveObjectServerRpc()
     {
+        this.transform.position += this.transform.forward * 3f;
+    }
 
-		if(mode && YouCan && Input.GetKeyDown(KeyCode.W))
-		{
-			this.transform.position = Vector3.Lerp(this.transform.position, this.transform.position + this.transform.forward, 3f);
-		}
-
-        // Rota a la izquierda con la letra 'A'
-        if (mode && Input.GetKeyDown(KeyCode.A))
+    [ServerRpc(RequireOwnership = false)]
+    private void RotateObjectLeftServerRpc()
+    {
+        if (zRotation == 360)
         {
-
-            if(zRotation == 360)
-            {
-                zRotation -= 360;
-            }
-            zRotation += 90;
-            // Restablece la rotación
-            transform.rotation = Quaternion.Euler(90, 0, 0);
-
-            transform.Rotate(0, 0, zRotation, Space.Self); // Rota en torno al eje   Y     del mundo hacia la izquierda.
+            zRotation -= 360;
         }
+        zRotation += 90;
+        SetRotation();
+    }
 
-        // Rota a la derecha con la letra 'D'
-        if (mode && Input.GetKeyDown(KeyCode.D))
+    [ServerRpc(RequireOwnership = false)]
+    private void RotateObjectRightServerRpc()
+    {
+        if (zRotation == 0)
         {
-            if(zRotation == 0)
-            {
-                 zRotation += 360;
-            }
-            zRotation -= 90;
-            // Restablece la rotación
-            transform.rotation = Quaternion.Euler(-90, 0, 0);
-            transform.Rotate(0, 0, -zRotation, Space.Self); // Rota en torno al eje Y  del  mundo hacia la derecha.
+            zRotation += 360;
         }
+        zRotation -= 90;
+        SetRotation();
+    }
 
-		//objectType == ObjectType.Player ||
-		//objectType == ObjectType.Player ||  
-		if (objectType == ObjectType.Glass0)
-		{
-			transform.rotation = Quaternion.Euler(0, zRotation,0);
-		}else{
-			transform.rotation = Quaternion.Euler(0,-180 + zRotation,0);
-		}	
+    private void SetRotation()
+    {
+        if (objectType == ObjectType.Glass0)
+        {
+            transform.rotation = Quaternion.Euler(0, zRotation, 0);
+        }
+        else
+        {
+            transform.rotation = Quaternion.Euler(0, -180 + zRotation, 0);
+        }
     }
 }

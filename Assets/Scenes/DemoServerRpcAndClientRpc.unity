@@ -7521,6 +7521,21 @@ MonoBehaviour:
       SourcePrefabToOverride: {fileID: 0}
       SourceHashToOverride: 0
       OverridingTargetPrefab: {fileID: 0}
+    - Override: 0
+      Prefab: {fileID: 1421276317}
+      SourcePrefabToOverride: {fileID: 0}
+      SourceHashToOverride: 0
+      OverridingTargetPrefab: {fileID: 0}
+    - Override: 0
+      Prefab: {fileID: 1671058931}
+      SourcePrefabToOverride: {fileID: 0}
+      SourceHashToOverride: 0
+      OverridingTargetPrefab: {fileID: 0}
+    - Override: 0
+      Prefab: {fileID: 757355199}
+      SourcePrefabToOverride: {fileID: 0}
+      SourceHashToOverride: 0
+      OverridingTargetPrefab: {fileID: 0}
     TickRate: 30
     ClientConnectionBufferTimeout: 10
     ConnectionApproval: 0
@@ -8778,9 +8793,21 @@ PrefabInstance:
       propertyPath: m_IsTrigger
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 8894102840538884790, guid: e62aa46f16bae72469d911e750168967, type: 3}
+      propertyPath: CanCommitToTransform
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8894102840538884792, guid: e62aa46f16bae72469d911e750168967, type: 3}
       propertyPath: GlobalObjectIdHash
       value: 2753113971
+      objectReference: {fileID: 0}
+    - target: {fileID: 8894102840538884792, guid: e62aa46f16bae72469d911e750168967, type: 3}
+      propertyPath: AutoObjectParentSync
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8894102840538884792, guid: e62aa46f16bae72469d911e750168967, type: 3}
+      propertyPath: AlwaysReplicateAsRoot
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8999469775652490577, guid: e62aa46f16bae72469d911e750168967, type: 3}
       propertyPath: m_RootOrder
@@ -8861,6 +8888,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mode: 0
+  initialPosition: {x: 13.52917, y: 0.648, z: 27.82}
+  playerInUse: 0
   objectType: 2
 --- !u!65 &757355206
 BoxCollider:
@@ -8891,6 +8920,18 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!114 &757355209
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 757355199}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f6c0be61502bb534f922ebb746851216, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &761733668
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -10970,7 +11011,7 @@ MonoBehaviour:
     ModeOverride: 0
     LensShift: {x: 0, y: 0}
     GateFit: 2
-    m_SensorSize: {x: 1.5989761, y: 1}
+    m_SensorSize: {x: 1.5986985, y: 1}
   m_Transitions:
     m_BlendHint: 0
     m_InheritPosition: 0
@@ -14484,19 +14525,19 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: -8679921383154817045, guid: d1105b11f515bc7489b07130cb04bcd1, type: 3}
       propertyPath: m_RootOrder
-      value: 16
+      value: 15
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: d1105b11f515bc7489b07130cb04bcd1, type: 3}
       propertyPath: m_LocalScale.x
-      value: 0.05
+      value: 0.07
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: d1105b11f515bc7489b07130cb04bcd1, type: 3}
       propertyPath: m_LocalScale.y
-      value: 0.05
+      value: 0.07
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: d1105b11f515bc7489b07130cb04bcd1, type: 3}
       propertyPath: m_LocalScale.z
-      value: 0.05
+      value: 0.07
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: d1105b11f515bc7489b07130cb04bcd1, type: 3}
       propertyPath: m_LocalPosition.x
@@ -14508,7 +14549,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: d1105b11f515bc7489b07130cb04bcd1, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 30.44
+      value: 30.287
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: d1105b11f515bc7489b07130cb04bcd1, type: 3}
       propertyPath: m_LocalRotation.w
@@ -14588,8 +14629,8 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 9.16029, y: 3.7112966, z: 4.9031715}
-  m_Center: {x: -0.7266331, y: 1.3556479, z: 1.9515858}
+  m_Size: {x: 9.16029, y: 5.026374, z: 12.732124}
+  m_Center: {x: -0.7266331, y: 0.69810975, z: 1.4478874}
 --- !u!114 &1421276320
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -14603,6 +14644,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mode: 0
+  initialPosition: {x: 13.435, y: 0.728, z: 30.287}
+  playerInUse: 0
   objectType: 0
 --- !u!65 &1421276321
 BoxCollider:
@@ -14615,8 +14658,8 @@ BoxCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 10.305424, y: 4.9723377, z: 8.351784}
-  m_Center: {x: -2.3178005, y: 0.71020174, z: 25.382786}
+  m_Size: {x: 10.305424, y: 8.109383, z: 12.498703}
+  m_Center: {x: -2.3178005, y: -0.85832, z: 27.456245}
 --- !u!114 &1421276322
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -18142,6 +18185,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mode: 0
+  initialPosition: {x: 13.52917, y: 0.648, z: 32.65}
+  playerInUse: 0
   objectType: 1
 --- !u!65 &1671058938
 BoxCollider:
@@ -19027,7 +19072,7 @@ Transform:
   - {fileID: 69886982}
   - {fileID: 154348362}
   m_Father: {fileID: 0}
-  m_RootOrder: 15
+  m_RootOrder: 16
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1770741642
 GameObject:
@@ -19462,9 +19507,17 @@ PrefabInstance:
       propertyPath: m_IsTrigger
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 8894102840538884790, guid: e62aa46f16bae72469d911e750168967, type: 3}
+      propertyPath: CanCommitToTransform
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8894102840538884792, guid: e62aa46f16bae72469d911e750168967, type: 3}
       propertyPath: GlobalObjectIdHash
       value: 2570462143
+      objectReference: {fileID: 0}
+    - target: {fileID: 8894102840538884792, guid: e62aa46f16bae72469d911e750168967, type: 3}
+      propertyPath: AlwaysReplicateAsRoot
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8999469775652490577, guid: e62aa46f16bae72469d911e750168967, type: 3}
       propertyPath: m_RootOrder

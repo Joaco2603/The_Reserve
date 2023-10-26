@@ -25,6 +25,7 @@ public class SeedPlants : NetworkBehaviour
     private void TimerButton()
     {
         number += 1;
+        Debug.Log("Timer");
     }
 
     private void OnTriggerStay(Collider other)

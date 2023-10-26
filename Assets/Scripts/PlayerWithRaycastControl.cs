@@ -64,6 +64,9 @@ public class PlayerWithRaycastControl : NetworkBehaviour
 
     private PlayerInput _playerInput;
 
+    public ulong PlayerHostId;
+    public NetworkObject PlayerHost;
+
     private void Awake()
     {
         characterController = GetComponent<CharacterController>();
@@ -80,6 +83,13 @@ public class PlayerWithRaycastControl : NetworkBehaviour
                    Random.Range(defaultInitialPositionOnPlane.x, defaultInitialPositionOnPlane.y));
 
             PlayerCameraFollow.Instance.FollowPlayer(transform.Find("PlayerCameraRoot"));
+        }
+        if (NetworkManager.Singleton.IsServer)
+        {
+            // Código del servidor
+            Debug.Log("Es el servidor");
+            PlayerHostId = GetComponent<NetworkObject>().OwnerClientId;
+            PlayerHost = GetComponent<NetworkObject>();
         }
     }
 

@@ -2,11 +2,14 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Unity.Netcode;
+using UnityEngine.InputSystem;
 
 public class ObjectsMove : NetworkBehaviour
 {
     public bool mode = false;
 	private bool YouCan = false;
+
+    private bool enabled = true;
 
     private float zRotation = 0; // Almacena la rotación acumulada en el eje Z
     Quaternion originalRotation;
@@ -14,15 +17,17 @@ public class ObjectsMove : NetworkBehaviour
     Floor floorObject;
 
 	[SerializeField]
-	private Vector3 initialPosition;
+	private Vector3 initialPosition = new Vector3(0, 0, 0);
 
-	Transform player;
-	Transform glass180;
-	Transform glass0;
+    // Lista estática para rastrear todas las instancias de este script
+    private static List<ObjectsMove> allInstances = new List<ObjectsMove>();
 
 	public ulong playerInUse;
 
 	private HashSet<ObjectType> objectsInContact = new HashSet<ObjectType>();
+
+    private PlayerInput _playerInput;
+
 
     public enum ObjectType
     {
@@ -33,55 +38,119 @@ public class ObjectsMove : NetworkBehaviour
     
     public ObjectType objectType;
 
-    // Update is called once per frame
-    void Update()
+
+    private void Awake()
     {
-        if (mode && YouCan && Input.GetKeyDown(KeyCode.W))
+        _playerInput = GetComponent<PlayerInput>();
+        _playerInput.actions["MoveUp"].performed += ctx => OnMoveUp();
+        _playerInput.actions["MoveLeft"].performed += ctx => OnMoveLeft();
+        _playerInput.actions["MoveRight"].performed += ctx => OnMoveRight();
+    }
+
+    void Start()
+    {
+        allInstances.Add(this);
+    }
+
+    private void OnDestroy()
+    {
+        _playerInput.actions["MoveUp"].performed -= ctx => OnMoveUp();
+        _playerInput.actions["MoveLeft"].performed -= ctx => OnMoveLeft();
+        _playerInput.actions["MoveRight"].performed -= ctx => OnMoveRight();
+        allInstances.Remove(this);
+    }
+
+    private bool hasProcessedInputThisFrame = false;
+
+    private void Update()
+    {
+        hasProcessedInputThisFrame = false;
+    }
+
+    private void OnMoveUp()
+    {
+        if (mode && YouCan)
         {
             MoveObjectServerRpc();
         }
+    }
 
-        if (mode && Input.GetKeyDown(KeyCode.A))
+    private void OnMoveLeft()
+    {
+        Debug.Log("Entro");
+        if (mode)
         {
             RotateObjectLeftServerRpc();
         }
+    }
 
-        if (mode && Input.GetKeyDown(KeyCode.D))
+    private void OnMoveRight()
+    {
+        if (mode)
         {
             RotateObjectRightServerRpc();
         }
     }
 
-	private void OnTriggerStay(Collider other)
-	{
-		var obj = other.gameObject.GetComponent<Floor>();
-		if(mode && obj != null)
-        {
-			YouCan = true;
-		}
-		var colisionWithPlayer = other.gameObject.tag;
-		if(mode && Input.GetKeyDown(KeyCode.W) && colisionWithPlayer == "Puzzle")
-		{
-			var tagsObjects = GameObject.FindGameObjectsWithTag("Puzzle");
 
-			foreach (var tags in tagsObjects)
-			{
-    		ObjectsMove objMove = tags.GetComponent<ObjectsMove>();
-    		if (objMove != null)
-    		{
-    		    Debug.Log(objMove.objectType);
-    		    switch (objMove.objectType)
-    		    {
-    		        case ObjectType.Player:
-    		        case ObjectType.Glass180:
-    		        case ObjectType.Glass0:
-    		            restartServerRpc();
-    		            break;
-        		}
-    		}
-			}
-		}
-	}
+    // Update is called once per frame
+    // void Update()
+    // {
+    //     if (mode && YouCan && _playerInput.actions["MoveUp"].ReadValue<float>() > 0 )
+    //     {
+    //         MoveObjectServerRpc();
+    //     }
+
+    //     if (mode && _playerInput.actions["MoveLeft"].ReadValue<float>() > 0)
+    //     {
+    //         RotateObjectLeftServerRpc();
+    //     }
+
+    //     if (mode && _playerInput.actions["MoveRight"].ReadValue<float>() > 0)
+    //     {
+    //         RotateObjectRightServerRpc();
+    //     }
+    // }
+
+	private void OnTriggerEnter(Collider other)
+    {
+        var obj = other.gameObject.GetComponent<Floor>();
+        if (mode && obj != null)
+        {
+            YouCan = true;
+        }
+
+        var colisionWithPlayer = other.gameObject.tag;
+
+        // Si el collider que fue golpeado tiene el componente "ObjectsMove"
+        if (other.gameObject.GetComponent<ObjectsMove>() != null)
+        {
+            // Restablece todos los objetos con este script
+            foreach (var instance in ObjectsMove.allInstances)
+            {
+                instance.ResetPosition();
+                // Si es el servidor, sincronizamos la posición con los clientes
+                if (IsServer)
+                {
+                    instance.RpcSyncPositionClientRpc(instance.initialPosition);
+                }
+            }
+        }
+    }
+
+    private void ResetPosition()
+    {
+        transform.position = initialPosition;
+    }
+
+    [ClientRpc]
+    private void RpcSyncPositionClientRpc(Vector3 newPosition)
+    {
+        transform.position = newPosition;
+    }
+
+
+
 
 	[ServerRpc(RequireOwnership = false)]
 	private void restartServerRpc()
@@ -138,29 +207,50 @@ private void CheckForWinnerCondition(Collision other)
 	[ServerRpc(RequireOwnership = false)]
     private void MoveObjectServerRpc()
     {
-        this.transform.position += this.transform.forward * 3f;
+        if(enabled)
+        {
+            this.transform.position += this.transform.forward * 0.9f;
+            enabled = false;
+            Invoke("EnabledAgain",0.1f);
+        }
     }
 
     [ServerRpc(RequireOwnership = false)]
     private void RotateObjectLeftServerRpc()
     {
-        if (zRotation == 360)
+        if(enabled)
         {
-            zRotation -= 360;
+            if (zRotation == 360)
+            {
+                zRotation -= 360;
+            }
+            zRotation += 90;
+            SetRotation();
+            enabled = false;
+            Invoke("EnabledAgain",0.3f);
         }
-        zRotation += 90;
-        SetRotation();
+            
     }
 
     [ServerRpc(RequireOwnership = false)]
     private void RotateObjectRightServerRpc()
     {
-        if (zRotation == 0)
+        if(enabled)
         {
-            zRotation += 360;
+            if (zRotation == 0)
+            {
+                zRotation += 360;
+            }
+            zRotation -= 90;
+            SetRotation();
+            enabled = false;
+            Invoke("EnabledAgain",0.3f);
         }
-        zRotation -= 90;
-        SetRotation();
+    }
+
+    private void EnabledAgain()
+    {
+        enabled = true;
     }
 
     private void SetRotation()

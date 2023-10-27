@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Unity.Netcode;
+using UnityEngine.InputSystem;
 
 public class StartPuzzle : NetworkBehaviour
 {
@@ -15,12 +16,18 @@ public class StartPuzzle : NetworkBehaviour
 
     private PlayerWithRaycastControl player;
 
+    private PlayerInput _playerInput;
+
+    private void Start()
+    {
+        _playerInput = GetComponent<PlayerInput>();
+    }
+
 
     private void OnTriggerStay(Collider other) 
     {
-        if(Input.GetKey(KeyCode.E) && IsClient)
+        if(_playerInput.actions["collect"].ReadValue<float>() > 0 && IsClient)
         {
-            Debug.Log("E");
             var callSound = CallSound.Instance;
             // Reproducir el sonido
             callSound.PlaySoundEffect();
@@ -40,7 +47,7 @@ public class StartPuzzle : NetworkBehaviour
             StartCoroutine(Transition(false,true));
         }
 
-        if(Input.GetKey(KeyCode.Q) && mode)
+        if(_playerInput.actions["Seed"].ReadValue<float>() > 0 && mode)
         {
             foreach (ObjectsMove objectMove in allObjectMoves)
             {

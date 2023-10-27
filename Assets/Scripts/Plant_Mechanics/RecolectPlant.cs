@@ -34,7 +34,7 @@ public class RecolectPlant : NetworkBehaviour
             if(isReady) return;
             isReady = true;
             PlantServerRpc();
-            Invoke("ReloadPlant",5f);
+            Invoke("ReloadPlant",10f);
         }
     }
 

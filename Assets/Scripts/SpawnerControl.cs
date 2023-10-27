@@ -102,7 +102,7 @@ public class SpawnerControl : NetworkSingleton<SpawnerControl>
     {
         while (true)
         {
-            yield return new WaitForSeconds(15);
+            yield return new WaitForSeconds(30);
             SpawnObjects();
         }
     }

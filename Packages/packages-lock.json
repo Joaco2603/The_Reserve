@@ -79,7 +79,7 @@
     },
     "com.unity.mathematics": {
       "version": "1.2.1",
-      "depth": 1,
+      "depth": 2,
       "source": "registry",
       "dependencies": {},
       "url": "https://packages.unity.com"
@@ -89,8 +89,8 @@
       "depth": 0,
       "source": "registry",
       "dependencies": {
-        "com.unity.netcode.gameobjects": "1.0.0-pre.3",
-        "com.unity.transport": "1.0.0-pre.7"
+        "com.unity.transport": "1.0.0-pre.7",
+        "com.unity.netcode.gameobjects": "1.0.0-pre.3"
       },
       "url": "https://packages.unity.com"
     },
@@ -100,9 +100,9 @@
       "source": "registry",
       "dependencies": {
         "com.unity.modules.ai": "1.0.0",
-        "com.unity.modules.animation": "1.0.0",
+        "com.unity.collections": "1.0.0-pre.5",
         "com.unity.nuget.mono-cecil": "1.10.1",
-        "com.unity.collections": "1.0.0-pre.5"
+        "com.unity.modules.animation": "1.0.0"
       },
       "url": "https://packages.unity.com"
     },
@@ -120,15 +120,6 @@
       "dependencies": {},
       "url": "https://packages.unity.com"
     },
-    "com.unity.render-pipelines.core": {
-      "version": "11.0.0",
-      "depth": 1,
-      "source": "builtin",
-      "dependencies": {
-        "com.unity.ugui": "1.0.0",
-        "com.unity.modules.physics": "1.0.0"
-      }
-    },
     "com.unity.render-pipelines.universal": {
       "version": "11.0.0",
       "depth": 0,
@@ -139,22 +130,15 @@
         "com.unity.shadergraph": "11.0.0"
       }
     },
-    "com.unity.searcher": {
-      "version": "4.3.2",
-      "depth": 2,
-      "source": "registry",
-      "dependencies": {},
-      "url": "https://packages.unity.com"
-    },
     "com.unity.services.authentication": {
       "version": "2.4.0",
       "depth": 2,
       "source": "registry",
       "dependencies": {
-        "com.unity.nuget.newtonsoft-json": "3.0.2",
+        "com.unity.ugui": "1.0.0",
         "com.unity.services.core": "1.7.0",
-        "com.unity.modules.unitywebrequest": "1.0.0",
-        "com.unity.ugui": "1.0.0"
+        "com.unity.nuget.newtonsoft-json": "3.0.2",
+        "com.unity.modules.unitywebrequest": "1.0.0"
       },
       "url": "https://packages.unity.com"
     },
@@ -163,9 +147,9 @@
       "depth": 1,
       "source": "registry",
       "dependencies": {
-        "com.unity.modules.unitywebrequest": "1.0.0",
+        "com.unity.modules.androidjni": "1.0.0",
         "com.unity.nuget.newtonsoft-json": "3.0.2",
-        "com.unity.modules.androidjni": "1.0.0"
+        "com.unity.modules.unitywebrequest": "1.0.0"
       },
       "url": "https://packages.unity.com"
     },
@@ -175,14 +159,14 @@
       "source": "registry",
       "dependencies": {
         "com.unity.services.core": "1.8.2",
+        "com.unity.services.wire": "1.1.8",
+        "com.unity.nuget.newtonsoft-json": "3.0.2",
         "com.unity.modules.unitywebrequest": "1.0.0",
-        "com.unity.modules.unitywebrequestassetbundle": "1.0.0",
+        "com.unity.services.authentication": "2.1.1",
+        "com.unity.modules.unitywebrequestwww": "1.0.0",
         "com.unity.modules.unitywebrequestaudio": "1.0.0",
         "com.unity.modules.unitywebrequesttexture": "1.0.0",
-        "com.unity.modules.unitywebrequestwww": "1.0.0",
-        "com.unity.nuget.newtonsoft-json": "3.0.2",
-        "com.unity.services.authentication": "2.1.1",
-        "com.unity.services.wire": "1.1.8"
+        "com.unity.modules.unitywebrequestassetbundle": "1.0.0"
       },
       "url": "https://packages.unity.com"
     },
@@ -191,15 +175,15 @@
       "depth": 0,
       "source": "registry",
       "dependencies": {
+        "com.unity.transport": "1.0.0-pre.6",
         "com.unity.services.core": "1.1.0-pre.10",
+        "com.unity.nuget.newtonsoft-json": "2.0.0",
         "com.unity.modules.unitywebrequest": "1.0.0",
-        "com.unity.modules.unitywebrequestassetbundle": "1.0.0",
+        "com.unity.services.authentication": "1.0.0-pre.6",
+        "com.unity.modules.unitywebrequestwww": "1.0.0",
         "com.unity.modules.unitywebrequestaudio": "1.0.0",
         "com.unity.modules.unitywebrequesttexture": "1.0.0",
-        "com.unity.modules.unitywebrequestwww": "1.0.0",
-        "com.unity.nuget.newtonsoft-json": "2.0.0",
-        "com.unity.services.authentication": "1.0.0-pre.6",
-        "com.unity.transport": "1.0.0-pre.6"
+        "com.unity.modules.unitywebrequestassetbundle": "1.0.0"
       },
       "url": "https://packages.unity.com"
     },
@@ -213,15 +197,6 @@
         "com.unity.services.authentication": "2.4.0"
       },
       "url": "https://packages.unity.com"
-    },
-    "com.unity.shadergraph": {
-      "version": "11.0.0",
-      "depth": 1,
-      "source": "builtin",
-      "dependencies": {
-        "com.unity.render-pipelines.core": "11.0.0",
-        "com.unity.searcher": "4.3.1"
-      }
     },
     "com.unity.test-framework": {
       "version": "1.1.24",
@@ -248,9 +223,9 @@
       "depth": 0,
       "source": "registry",
       "dependencies": {
+        "com.unity.modules.audio": "1.0.0",
         "com.unity.modules.director": "1.0.0",
         "com.unity.modules.animation": "1.0.0",
-        "com.unity.modules.audio": "1.0.0",
         "com.unity.modules.particlesystem": "1.0.0"
       },
       "url": "https://packages.unity.com"
@@ -260,8 +235,8 @@
       "depth": 1,
       "source": "registry",
       "dependencies": {
-        "com.unity.collections": "1.0.0-pre.5",
         "com.unity.burst": "1.5.5",
+        "com.unity.collections": "1.0.0-pre.5",
         "com.unity.mathematics": "1.2.1"
       },
       "url": "https://packages.unity.com"
@@ -282,11 +257,11 @@
       "dependencies": {
         "com.unity.ugui": "1.0.0",
         "com.unity.modules.ai": "1.0.0",
-        "com.unity.modules.animation": "1.0.0",
-        "com.unity.modules.jsonserialize": "1.0.0",
-        "com.unity.modules.particlesystem": "1.0.0",
         "com.unity.modules.physics": "1.0.0",
-        "com.unity.modules.physics2d": "1.0.0"
+        "com.unity.modules.animation": "1.0.0",
+        "com.unity.modules.physics2d": "1.0.0",
+        "com.unity.modules.jsonserialize": "1.0.0",
+        "com.unity.modules.particlesystem": "1.0.0"
       },
       "url": "https://packages.unity.com"
     },
